@@ -1,0 +1,111 @@
+.contents {
+    display: flex;
+    width: 1600px;
+    height: 89vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.trans {
+    width: 40%;
+    height: 35%;
+    margin: 15px;
+    background-color: white;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px 6px #e7e7e7;
+    /* justify-content: center;
+    align-items: center; */
+}
+
+.transhead {
+    font-size: 30px;
+    color: #004A90;
+    font-weight: 900;
+    align-self: center;
+    padding-top: 20px;
+}
+
+.transinhead{
+    font-size: 18px;
+    padding: 10px;
+    display: flex;
+    color: #004A90;
+}
+
+.transinput {
+    padding: 10px;
+    margin: 10px;
+}
+
+.transbutton {
+    width: 180px;
+    height: 40px;
+    align-self: center;
+    border: none;
+    font-size: larger;
+    color: white;
+    background-color: #004A90;
+    margin-top: 20px;
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+}
+
+.transbutton:hover{
+    transform: scale(1.06);
+    background-color: #080a0a;
+    color: white;
+}
+
+
+
+/* temp */
+
+.hidden {
+    display: none;
+}
+
+.send-money {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    margin: auto;
+}
+
+.send-money form {
+    display: flex;
+    flex-direction: column;
+}
+
+.send-money label {
+    margin: 10px 0 5px;
+    font-size: 16px;
+}
+
+.send-money select,
+.send-money input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.send-money button {
+    background: #000000;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.send-money button:hover {
+    background: #155c9d;
+}

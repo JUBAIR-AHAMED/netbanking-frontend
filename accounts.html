@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>My Account</title>
+<link rel="stylesheet" href="Css/accounts.css">
+<link rel="stylesheet" href="Css/mainframe.css">
+
+</head>
+<body>
+	<div class="maincont">
+        
+        <div class="page">
+            <div class = "header">
+                <div class="pageName">Bank Of Utopia</div>
+                <div class="bar">
+                </div>
+                <div class="profileimg" onclick="toggleDropdown()">
+                    <img src="/icons/10-profile-picture-ideas-to-make-you-stand-out (1).jpg">
+                    <div id="profileDropdown" class="dropdown-content">
+                        <a href="/profile.html">View Profile</a>
+                    </div>
+                </div>
+            </div>
+            <div class="pagebody">
+                <button id="prev" class="arrow-button">‹</button>
+                <div class="cardcontent">
+                </div>
+                <button id="next" class="arrow-button">›</button>
+            </div>
+            <div class="statement" style="width: 99%; box-shadow: 0 0px 1px 0px #000000; border-radius: 8px; height: 608px; margin-top: 20px; margin-left: 10px; margin-right: 10px;">
+                <div id="transactionHead">Recent Transactions</div>
+                <div class="headerColumn">
+                    <div class="columnName">Transaction ID</div>
+                    <div class="columnName">Account</div>
+                    <div class="columnName">Amount</div>
+                    <div class="columnName">Balance</div>
+                <div class="columnName">Time</div>
+                </div>
+                <div id="statementInsert">
+                </div>
+            </div>
+        </div>
+	</div>
+    <script src="JavaScript/accounts.js"></script>
+    <script src="JavaScript/bar.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <link rel="stylesheet" href="Css/login.css">
+</head>
+<body>
+	<div class="left">
+	</div>
+	<div class="right">
+	<div class="name">		
+        <span>BANK OF UTOPIA</span>
+	</div>
+    <div class="container">
+        <form id="loginForm">
+        	<span>Sign In</span>
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn" value="Login">Sign In</button>
+        </form>
+    </div>
+	</div>
+</body>
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async function (event) {
+        event.preventDefault(); 
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const response = await fetch('http://localhost:8080/NetBanking/userlogin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const result = await response.json();
+
+            if (result.status) {
+                localStorage.setItem('jwt', result.token);
+
+                window.location.href = '/accounts.html';
+            } else {
+                alert(result.message);
+            }
+        } catch (error) {
+            console.error('Error during login:', error);
+            alert('An error occurred during login. Please try again.');
+        }
+    });
+</script>
+</html>

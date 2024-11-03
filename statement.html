@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>My Account</title>
+<link rel="stylesheet" href="Css/mainframe.css">
+<link rel="stylesheet" href="Css/statement.css">
+</head>
+<body>
+	<div class="maincont">
+        <div class="page">
+            <div class = "header">
+                <div class="pageName">Bank Of Utopia</div>
+                <div class="bar">
+                </div>
+                <div class="profileimg" onclick="toggleDropdown()">
+                    <img src="/icons/10-profile-picture-ideas-to-make-you-stand-out (1).jpg" alt="profile image">
+                    <div id="profileDropdown" class="dropdown-content">
+                        <a href="/profile.html">View Profile</a>
+                    </div>
+                </div>
+            </div>
+            <div style="width: 100%; display: flex; justify-content: center;">
+                <form id="trans" class="trans">
+                    <span class="transhead">
+                        Get Statement
+                    </span>
+                    <span class="transinhead">
+                        Account Number
+                    </span>
+                    <input id="accountNumber" class="transinput" type="text">
+                    <span class="transinhead">
+                        From Date
+                    </span>
+                    <input id="fromDate" class="transinput" type="date">
+                    <span class="transinhead">
+                        To Date
+                    </span>
+                    <input id="toDate" class="transinput" type="date">
+                    <button class="transbutton" type="submit">Get Statement</button>
+                </form>
+            </div>
+            <div class="statement" style="width: 99%; box-shadow: 0 0px 1px 0px #000000; border-radius: 8px; height: 505px; margin-top: 20px; margin-left: 10px; margin-right: 10px;">
+                <div id="transactionHead">Recent Transactions</div>
+                <div class="headerColumn">
+                    <div class="columnName">Transaction ID</div>
+                    <div class="columnName">Account</div>
+                    <div class="columnName">Amount</div>
+                    <div class="columnName">Balance</div>
+                <div class="columnName">Date</div>
+                </div>
+                <div id="statementInsert">
+                </div>
+            </div>
+        </div>
+        </div>
+	</div>
+    <script>
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("fromDate").setAttribute("max", today);
+        document.getElementById("toDate").setAttribute("max", today);
+        document.getElementById("fromDate").addEventListener("change", function() {
+            const fromDateValue = this.value;
+            document.getElementById("toDate").setAttribute("min", fromDateValue);
+        });
+    </script>
+    <script src="JavaScript/bar.js"></script>
+    <script src="JavaScript/statement.js"></script>
+</body>
+</html>

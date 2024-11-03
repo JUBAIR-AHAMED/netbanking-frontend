@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account</title>
+<link rel="stylesheet" href="Css/accounts.css">
+<link rel="stylesheet" href="Css/mainframe.css">
+<style>
+    /* Styling for the search bar and shortcuts */
+    .pagebody {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        color: white;
+    }
+
+    .search-container {
+        display: flex;
+        align-items: center;
+        background-color: #000000;
+        border-radius: 24px;
+        padding: 10px 20px;
+        width: 60%;
+        max-width: 600px;
+        margin-top: 40px;
+    }
+
+    .search-input {
+        flex-grow: 1;
+        border: none;
+        background: none;
+        color: rgb(255, 255, 255);
+        font-size: 16px;
+        padding: 10px;
+        outline: none;
+    }
+
+    .search-input::placeholder {
+        color: #ffffff;
+        opacity: 1;
+    }
+
+    .search-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #9aa0a6;
+        font-size: 20px;
+        padding: 0;
+        margin-left: 8px;
+    }
+
+    .search-button:focus {
+        outline: none;
+    }
+</style>
+</head>
+<body>
+    <div class="maincont">
+        <div class="page">
+            <div class="header">
+                <div class="pageName">Bank Of Utopia</div>
+                <div class="bar"></div>
+                <div class="profileimg" onclick="toggleDropdown()">
+                    <img src="/icons/10-profile-picture-ideas-to-make-you-stand-out (1).jpg" alt="Profile">
+                    <div id="profileDropdown" class="dropdown-content">
+                        <a href="/profile.html">View Profile</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pagebody">
+                <!-- Search bar -->
+                <form class="search-container" id="searchForm">
+                    <input type="text" id="accountNumber" class="search-input" placeholder="Search accounts...">
+                    <button type="submit" class="search-button">&#128269;</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="JavaScript/accountsmanager.js"></script>
+    <script src="JavaScript/bar.js"></script>
+</body>
+</html>
