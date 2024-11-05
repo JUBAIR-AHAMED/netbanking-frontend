@@ -1,7 +1,7 @@
 function createBar(profileName) {
     return `
             <div>
-                <a href="accounts.html" id="accountLink">Account</a>
+                <a href="" id="accountLink">Account</a>
             </div>
             <div>
                 <a href="transaction.html" id="transactionLink">Transaction</a>
@@ -26,6 +26,22 @@ const currentPage = window.location.pathname;
 const accountLink = document.getElementById('accountLink');
 const transactionLink = document.getElementById('transactionLink');
 const statementLink = document.getElementById('statementLink');
+
+const token = localStorage.getItem('jwt');
+let role = null;
+
+if (token) {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    role = payload.role;
+}
+
+if (role === 'CUSTOMER') {
+    accountLink.href = '/accounts.html';
+} else if(role === 'EMPLOYEE'||role === 'MANAGER'){
+    accountLink.href = '/accountsmanager.html';
+}
+
+
 
 // Apply the 'active' class based on the current page
 if (currentPage.includes('accounts.html')) {

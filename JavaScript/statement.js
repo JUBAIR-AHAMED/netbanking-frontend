@@ -1,14 +1,16 @@
-function createStatement(transactionId, accountNumber, amount, balance, time) {
+function createStatement(transactionId, accountNumber, amount, balance, type, time) {
     if(accountNumber == null)
     {
-        accountNumber = amount > 0 ? "Deposit" : "Withdraw"
+        // accountNumber = amount > 0 ? "Deposit" : "Withdraw"
+        accountNumber = "-"
     }
     return `
         <div class="valueColumn">
             <div class="columnValues">${transactionId}</div>
             <div class="columnValues">${accountNumber}</div>
-            <div class="columnValuesRightAlign">₹ ${formatIndianCurrency(amount)} ${getTransactionNature(amount)}</div>
-            <div class="columnValuesRightAlign">₹ ${formatIndianCurrency(balance)}</div>
+            <div class="columnValues">${formatIndianCurrency(amount)}</div>
+            <div class="columnValues">${formatIndianCurrency(balance)}</div>
+            <div class="columnValues">${type}</div>
             <div class="columnValues">${formatDate(time)}</div>
         </div>
     `
@@ -60,6 +62,7 @@ function displayStatement(statement) {
             statement.transactionAccount,
             statement.transactionAmount,
             statement.balance,
+            statement.type,
             statement.timestamp
         );
 
@@ -68,6 +71,16 @@ function displayStatement(statement) {
 }
 
 document.addEventListener('DOMContentLoaded', function(){
+    const urlParams = new URLSearchParams(window.location.search);
+        
+    // Check if 'accountNumber' exists in the query parameters
+    const accountNumber = urlParams.get('accountNumber');
+    
+    // If an account number is found in the URL, fill the input field
+    if (accountNumber) {
+        document.getElementById('accountNumber').value = accountNumber;
+    }
+    
     try {
         const token = localStorage.getItem('jwt');
         if(!token) {

@@ -1,0 +1,145 @@
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: #000000;
+    border-radius: 24px;
+    padding: 10px 20px;
+    width: 60%;
+    max-width: 600px;
+}
+
+.search-input {
+    flex-grow: 1;
+    border: none;
+    background: none;
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+    padding: 10px;
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: #ffffff;
+    opacity: 1;
+}
+
+.search-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #9aa0a6;
+    font-size: 20px;
+    padding: 0;
+    margin-left: 8px;
+}
+
+.search-button:focus {
+    outline: none;
+}
+.cardcontent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px; 
+    margin-top: 20px; 
+    margin-top: 80px; 
+    height: 82vh;
+    overflow: auto;
+}   
+
+.card{
+    border-radius: 10px;
+}
+
+.cardBody {
+    display: flex;
+    width: 1600px;
+    justify-content: space-around;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 0px -2px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.cardBody h3{
+    font-size: 25px;
+    color: #158185;
+}
+
+.cardBodyItem {
+    font-size: 22px;
+    padding-bottom: 15px;
+}
+
+.cardBodyItem span{
+    font-size: 18px;
+    font-weight: bold;
+    padding-right: 15px;
+}
+
+.balance-amount {
+    font-family: monospace;
+    font-size: 30px;
+    font-weight: 600;
+    color: forestgreen;
+}
+
+.card-footer {
+    display: flex;
+    flex-direction: column;
+    /* border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px; */
+    /* display: flex; */
+    /* justify-content: space-around; */
+}
+
+.card-footer a{
+    font-size: 20px;
+    text-decoration: none;
+    color: crimson;
+    padding-bottom: 25px;
+    font-weight: 600;
+    /* background-color: white; */
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: #000000;
+    border-radius: 24px;
+    padding: 10px 20px;
+    width: 60%;
+    max-width: 600px;
+    position: fixed;
+}
+
+.search-select {
+    background-color: #333; /* Background color for dropdown */
+    color: #ffffff; /* Text color */
+    border: none;
+    border-radius: 12px;
+    padding: 10px;
+    margin-right: 10px; /* Space between dropdown and input */
+    font-size: 16px;
+}
+
+.search-input {
+    flex-grow: 1;
+    border: none;
+    background: none;
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+    padding: 10px;
+    outline: none;
+}
+
+.search-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #9aa0a6;
+    font-size: 20px;
+    padding: 0;
+    margin-left: 8px;
+}

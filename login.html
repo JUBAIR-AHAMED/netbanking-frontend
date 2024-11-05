@@ -48,9 +48,15 @@
             const result = await response.json();
 
             if (result.status) {
-                localStorage.setItem('jwt', result.token);
-
-                window.location.href = '/accounts.html';
+                const token = result.token
+                localStorage.setItem('jwt', token);
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                const role = payload.role; 
+                if (role === 'CUSTOMER') {
+                    window.location.href = '/accounts.html';
+                } else {
+                    window.location.href = '/accountsmanager.html';
+                }
             } else {
                 alert(result.message);
             }

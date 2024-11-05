@@ -11,31 +11,48 @@ function decodeJWT(token) {
         return null;
     }
 }
-
-let accounts = null;
-function createAccountCard(accountNumber, balance, accountType, ifsc, dateOfOpening) {
-    dateOfOpening = formatDate(dateOfOpening);
-    accountNumber = formatAccountNumber(accountNumber); // Format the account number
+function createAccountCard(account) {
+    const {
+        accountNumber,
+        balance,
+        accountType,
+        ifsc,
+        dateOfOpening,
+        name,
+        branchId,
+        address,
+        status
+    } = account;
+    
     return `
-        <div class="contents">
-            <div class="card">
-                <div class="cardbankname">
-                    BOU
+        <div class="card">
+            <div class="cardBody">
+                <div>
+                    <h3>Account Details</h3>
+                    <div class="cardBodyItem"  class="card-number"><span>Account Number: </span>${formatAccountNumber(accountNumber)}</div>
+                    <div class="cardBodyItem" ><span>Account Type: </span>${accountType}</div>
+                    <div class="cardBodyItem" ><span>IFSC: </span>${ifsc}</div>
+                    <div class="cardBodyItem" ><span>Date of Opening: </span>${formatDate(dateOfOpening)}</div>
+                    <div class="cardBodyItem" ><span>Status: </span>${capitalizeFirstLetter(status)}</div>
                 </div>
-                <span class="cardnumber">${accountNumber}</span>
-                <div class="balance-info">
-                    <div class="balance">
-                        <span>Balance</span>
-                        <span class="balancerupee">₹ ${formatIndianCurrency(balance)}</span>
-                    </div>
-                    <div class="dateOfOpening">
-                        <span>Date Of Creation</span>
-                        <span class="date">${dateOfOpening}</span>
-                    </div>
+                <div>
+                    <h3>Branch Details</h3>
+                    <div class="cardBodyItem" ><span>Branch Id: </span>${branchId}</div>
+                    <div class="cardBodyItem" ><span>Branch Name: </span>${name}</div>
+                    <div class="cardBodyItem" ><span>Branch Address: </span>${address}</div >
+                </div>
+                <div style="width: 350px;">
+                    <h3>Balance</h3>
+                    <div class="cardBodyItem balance-amount">₹ ${formatIndianCurrency(balance)}</div>
+                </div>
+                <div class="card-footer">
+                    <h3>Actions</h3>
+                    <a href="statement.html?accountNumber=${accountNumber}" class="btn">Get Statement</a>
+                    <a href="statement.html?accountNumber=${accountNumber}" class="btn">Block Or Delete</a>
                 </div>
             </div>
         </div>
-`;
+    `;
 }
 
 let index = 0
@@ -76,18 +93,20 @@ function formatIndianCurrency(amount) {
     return formattedAmount;
 }
 
-document.getElementById('searchForm').addEventListener('submit', async function(event){
+document.getElementById('searchForm').addEventListener('submit', async function(event) {
     event.preventDefault();
-    try{
+    try {
         const token = localStorage.getItem('jwt'); // Get the stored JWT token
         if (!token) {
             window.location.href = "/login.html";
             return;
         }
+
         const accountNumber = document.getElementById('accountNumber').value;
-        console.log(accountNumber)
-        
-        const response = await fetch(`http://localhost:8080/NetBanking/accounts?accountNumber=${accountNumber}`, {
+        const searchCriteria = document.getElementById('searchCriteria').value; // Get selected option
+        console.log(accountNumber);
+
+        const response = await fetch(`http://localhost:8080/NetBanking/accounts?${searchCriteria}=${accountNumber}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -96,75 +115,34 @@ document.getElementById('searchForm').addEventListener('submit', async function(
         const data = await response.json();
         console.log(data);
         if (data.status) {
-            if(Array.isArray(data.accounts))
-            {
-                accounts = data.accounts
+            if (Array.isArray(data.accounts)) {
+                displayAccounts(data.accounts);
             } else {
-                accounts=null;
+                displayAccounts(null)
             }
-            // displayAccounts(index);
         } else {
             alert(data.message);
-            window.location.href = "/login.html"; // Redirect to login if unauthorized
         }
     } catch (error) {
-        console.log(error)
-        alert("failed")
+        console.log(error);
+        alert("failed");
     }
-})
+});
 
-// function displayAccounts(index) {
-//     const accountsContainer = document.querySelector('.cardcontent');
-
-//     const prevButton = document.getElementById('prev');
-//     const nextButton = document.getElementById('next');
-
-//     prevButton.style.visibility = index > 0 ? 'visible' : 'hidden';
-//     nextButton.style.visibility = index < accounts.length - 1 ? 'visible' : 'hidden';
-
-//     if (accounts==null||accounts.length === 0) {
-//         accountsContainer.innerHTML = "<p>No accounts found.</p>";
-//         return;
-//     }
-//     const accountHTML = createAccountCard(
-//         accounts[index].accountNumber,
-//         accounts[index].balance,
-//         accounts[index].accountType,
-//         accounts[index].ifsc,
-//         accounts[index].dateOfOpening
-//     );
-//     accountsContainer.innerHTML = accountHTML;
-//     fetchStatement(accounts[index].accountNumber)
-// }
-
-// function displayStatement(statement) {
-//     const statementContainer = document.querySelector('#statementInsert');
-
-//     if (!statementContainer) {
-//         console.error("Element with id 'statementInsert' not found in the DOM.");
-//         return;
-//     }
-
-//     if (statement===null||statement.length === 0) {
-//         statementContainer.innerHTML = "<p style=\"padding: 10px; font-size: 20px; color: darkred;\">No statement found.</p>";
-//         return;
-//     }
-
-//     statementContainer.innerHTML = ''; // Clear previous content
-
-//     statement.forEach(statement => {
-//         let statementHTML = createStatement(
-//             statement.referenceNumber,
-//             statement.transactionAccount,
-//             statement.transactionAmount,
-//             statement.balance,
-//             statement.timestamp
-//         );
-
-//         statementContainer.insertAdjacentHTML('beforeend', statementHTML);
-//     });
-// }
-
+function displayAccounts(accounts) {
+    const accountsContainer = document.querySelector('.cardcontent');
+    
+    if (accounts == null || accounts.length === 0) {
+        accountsContainer.innerHTML = "<p>No accounts found.</p>";
+        return;
+    }
+    accountsContainer.innerHTML = ''
+    accounts.forEach(account => {
+        const accountHTML = createAccountCard(account);
+        accountsContainer.insertAdjacentHTML('beforeend', accountHTML);
+    });
+    // document.querySelector('.pagebody').style.paddingTop = "10px"; 
+}
 
 function toggleDropdown() {
     const dropdown = document.getElementById("profileDropdown");

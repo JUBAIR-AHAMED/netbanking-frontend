@@ -143,6 +143,8 @@ a.active::after {
     border-radius: 8px;
     margin: 5px;
     background-color: black;
+    width: 1874px;
+    position: fixed;
 }
 
 .header img {
@@ -163,6 +165,7 @@ a.active::after {
     margin: 5px;
     justify-content: center;
     margin-top: 20px;
+    margin-top: 90px;
 }
 
 /* .pagecontent {

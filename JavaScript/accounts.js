@@ -14,8 +14,8 @@ function decodeJWT(token) {
 }
 
 let accounts = null;
-function createAccountCard(accountNumber, balance, accountType, ifsc, dateOfOpening) {
-    dateOfOpening = formatDate(dateOfOpening);
+function createAccountCard(accountNumber, balance, accountType, ifsc, branchName) {
+    // dateOfOpening = formatDate(dateOfOpening);
     accountNumber = formatAccountNumber(accountNumber); // Format the account number
     return `
         <div class="contents">
@@ -30,8 +30,8 @@ function createAccountCard(accountNumber, balance, accountType, ifsc, dateOfOpen
                         <span class="balancerupee">₹ ${formatIndianCurrency(balance)}</span>
                     </div>
                     <div class="dateOfOpening">
-                        <span>Date Of Creation</span>
-                        <span class="date">${dateOfOpening}</span>
+                        <span>Branch Name</span>
+                        <span class="date">${branchName}</span>
                     </div>
                 </div>
             </div>
@@ -39,17 +39,20 @@ function createAccountCard(accountNumber, balance, accountType, ifsc, dateOfOpen
 `;
 }
 
-function createStatement(transactionId, accountNumber, amount, balance, time) {
+function createStatement(transactionId, accountNumber, amount, balance, type, time) {
     if(accountNumber == null)
     {
-        accountNumber = amount > 0 ? "Deposit" : "Withdraw"
+        // accountNumber = amount > 0 ? "Deposit" : "Withdraw"
+        accountNumber = "-"
     }
+    const typeColor = (type === "Withdraw" || type === "Debit") ? "red" : "green";
     return `
         <div class="valueColumn">
             <div class="columnValues">${transactionId}</div>
             <div class="columnValues">${accountNumber}</div>
-            <div class="columnValuesRightAlign">₹ ${formatIndianCurrency(amount)} ${getTransactionNature(amount)}</div>
-            <div class="columnValuesRightAlign">₹ ${formatIndianCurrency(balance)}</div>
+            <div class="columnValues">${formatIndianCurrency(amount)}</div>
+            <div class="columnValues">${formatIndianCurrency(balance)}</div>
+            <div class="columnValues" style="color: ${typeColor};">${type}</div>
             <div class="columnValues">${formatDate(time)}</div>
         </div>
     `
@@ -118,11 +121,11 @@ async function fetchAccounts() {
             return;
         }
         
-        const role = decodedToken ? decodedToken.role : null;
-        if(role !== "CUSTOMER") {
-            window.location.href = "/accountsmanager.html"
-        }
-        console.log(role)
+        // const role = decodedToken ? decodedToken.role : null;
+        // if(role !== "CUSTOMER") {
+        //     window.location.href = "/accountsmanager.html"
+        // }
+        // console.log(role)
 
         const response = await fetch('http://localhost:8080/NetBanking/accounts', {
             method: 'GET',
@@ -217,7 +220,7 @@ function displayAccounts(index) {
         accounts[index].balance,
         accounts[index].accountType,
         accounts[index].ifsc,
-        accounts[index].dateOfOpening
+        accounts[index].name
     );
     accountsContainer.innerHTML = accountHTML;
     fetchStatement(accounts[index].accountNumber)
@@ -244,6 +247,7 @@ function displayStatement(statement) {
             statement.transactionAccount,
             statement.transactionAmount,
             statement.balance,
+            statement.type,
             statement.timestamp
         );
 
@@ -270,13 +274,14 @@ document.getElementById('next').addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', fetchAccounts);
 
 function toggleDropdown() {
-    const dropdown = document.getElementById("profileDropdown");
-    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    // const dropdown = document.getElementById("profileDropdown");
+    // dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    window.location.href='profile.html';
 }
 
-document.addEventListener("click", function(event) {
-    const dropdown = document.getElementById("profileDropdown");
-    if (!event.target.closest(".profileimg")) {
-        dropdown.style.display = "none";
-    }
-});
+// document.addEventListener("click", function(event) {
+//     const dropdown = document.getElementById("profileDropdown");
+//     if (!event.target.closest(".profileimg")) {
+//         dropdown.style.display = "none";
+//     }
+// });
