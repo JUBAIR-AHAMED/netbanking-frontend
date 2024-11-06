@@ -272,16 +272,3 @@ document.getElementById('next').addEventListener('click', () => {
 
 
 document.addEventListener('DOMContentLoaded', fetchAccounts);
-
-function toggleDropdown() {
-    // const dropdown = document.getElementById("profileDropdown");
-    // dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-    window.location.href='profile.html';
-}
-
-// document.addEventListener("click", function(event) {
-//     const dropdown = document.getElementById("profileDropdown");
-//     if (!event.target.closest(".profileimg")) {
-//         dropdown.style.display = "none";
-//     }
-// });

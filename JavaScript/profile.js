@@ -60,6 +60,11 @@ function createProfile() {
                             <span class="non-editable-field" id="pan">XXXXX1234X</span>
                         </div>
 
+                        <div id="role-container" class="info-row" style="display: none;">
+                            <label for="role">Role</label>
+                            <span class="non-editable-field" id="role"></span>
+                        </div>
+
                         <div id="branchId-container" class="info-row" style="display: none;">
                             <label for="branchId">Branch ID</label>
                             <span class="non-editable-field" id="branchId">12345</span>
@@ -106,11 +111,11 @@ function displayProfile(profile) {
     profileContainer.innerHTML = createProfile();
 
     // Populate mandatory profile fields
-    document.getElementById("name").innerText = profile.name || "John Doe";
-    document.getElementById("email").innerText = profile.email || "john.doe@example.com";
-    document.getElementById("mobile").innerText = profile.mobile || "123-456-7890";
-    document.getElementById("dob").innerText = profile.dateOfBirth || "01.01.1990";
-    document.getElementById("status").innerText = profile.status || "Active";
+    document.getElementById("name").innerText = profile.name;
+    document.getElementById("email").innerText = profile.email;
+    document.getElementById("mobile").innerText = profile.mobile;
+    document.getElementById("dob").innerText = profile.dateOfBirth;
+    document.getElementById("status").innerText = profile.status;
 
     // Conditionally display Aadhar, PAN, and Branch ID
     if (profile.aadharNumber) {
@@ -129,6 +134,12 @@ function displayProfile(profile) {
         const branchIdContainer = document.getElementById("branchId-container");
         document.getElementById("branchId").innerText = profile.branchId;
         branchIdContainer.style.display = "flex";
+    }
+
+    if ((profile.role) && profile.role === "EMPLOYEE" || profile.role === "MANAGER") {
+        const roleContainer = document.getElementById("role-container");
+        document.getElementById("role").innerText = profile.role;
+        roleContainer.style.display = "flex";
     }
 }
 

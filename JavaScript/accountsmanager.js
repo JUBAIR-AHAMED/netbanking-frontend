@@ -1,3 +1,4 @@
+// Function to decode JWT token and extract role and branchId
 function decodeJWT(token) {
     try {
         const base64Url = token.split('.')[1];
@@ -5,12 +6,13 @@ function decodeJWT(token) {
         const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
-        return JSON.parse(jsonPayload);
+        return JSON.parse(jsonPayload); // Return the decoded token payload
     } catch (e) {
         console.error('Invalid token', e);
         return null;
     }
 }
+
 function createAccountCard(account) {
     const {
         accountNumber,
@@ -23,7 +25,41 @@ function createAccountCard(account) {
         address,
         status
     } = account;
-    
+
+    // Get the JWT token and decode it to get role and branchId
+    const token = localStorage.getItem('jwt');
+    const decodedToken = decodeJWT(token);
+
+    const userRole = decodedToken?.role;  // Extract user role (e.g., 'MANAGER' or 'EMPLOYEE')
+    const userBranchId = decodedToken?.branchId;  // Extract user branchId
+
+    // Determine if the "Actions" section should be displayed
+    let actionsContent = '';
+    if (userRole === 'MANAGER') {
+        // If the user is a manager, always show actions
+        actionsContent = `
+            <h3>Actions</h3>
+            <a href="statement.html?accountNumber=${accountNumber}" class="btn">Get Statement</a>
+            <a href="transaction.html?accountNumber=${accountNumber}" class="btn">Make Transaction</a>
+            <a href="action.html?accountNumber=${accountNumber}" class="btn">Block Or Delete</a>
+        `;
+    } else if (userRole === 'EMPLOYEE') {
+        // If the user is an employee, only show actions if the branchId matches
+        if (userBranchId === branchId) {
+            actionsContent = `
+                <h3>Actions</h3>
+                <a href="statement.html?accountNumber=${accountNumber}" class="btn">Get Statement</a>
+                <a href="transaction.html?accountNumber=${accountNumber}" class="btn">Make Transaction</a>
+                <a href="action.html?accountNumber=${accountNumber}" class="btn">Block Or Delete</a>
+            `;
+        } else {
+            actionsContent = `
+            <div style="width: 240px; color: crimson;">
+            <h2 style="font-size: larger;">You cannot perform any actions in this account.</h2>
+            </div>`;
+        }
+    }
+
     return `
         <div class="card">
             <div class="cardBody">
@@ -46,16 +82,12 @@ function createAccountCard(account) {
                     <div class="cardBodyItem balance-amount">₹ ${formatIndianCurrency(balance)}</div>
                 </div>
                 <div class="card-footer">
-                    <h3>Actions</h3>
-                    <a href="statement.html?accountNumber=${accountNumber}" class="btn">Get Statement</a>
-                    <a href="statement.html?accountNumber=${accountNumber}" class="btn">Block Or Delete</a>
+                    ${actionsContent}
                 </div>
             </div>
         </div>
     `;
 }
-
-let index = 0
 
 function formatAccountNumber(accountNumber) {
     accountNumber = String(accountNumber);
@@ -83,7 +115,7 @@ function formatIndianCurrency(amount) {
 
     const [integerPart, decimalPart = ''] = absoluteAmount.toString().split('.');
 
-    const formattedDecimalPart = decimalPart.padEnd(2, '0').slice(0, 2)
+    const formattedDecimalPart = decimalPart.padEnd(2, '0').slice(0, 2);
     const lastThreeDigits = integerPart.slice(-3);
     const otherDigits = integerPart.slice(0, -3);
     const formattedIntegerPart = otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + (otherDigits ? ',' : '') + lastThreeDigits;
@@ -104,7 +136,6 @@ document.getElementById('searchForm').addEventListener('submit', async function(
 
         const accountNumber = document.getElementById('accountNumber').value;
         const searchCriteria = document.getElementById('searchCriteria').value; // Get selected option
-        console.log(accountNumber);
 
         const response = await fetch(`http://localhost:8080/NetBanking/accounts?${searchCriteria}=${accountNumber}`, {
             method: 'GET',
@@ -113,19 +144,18 @@ document.getElementById('searchForm').addEventListener('submit', async function(
             }
         });
         const data = await response.json();
-        console.log(data);
         if (data.status) {
             if (Array.isArray(data.accounts)) {
                 displayAccounts(data.accounts);
             } else {
-                displayAccounts(null)
+                displayAccounts(null);
             }
         } else {
             alert(data.message);
         }
     } catch (error) {
         console.log(error);
-        alert("failed");
+        alert("Failed to retrieve accounts.");
     }
 });
 
@@ -136,22 +166,10 @@ function displayAccounts(accounts) {
         accountsContainer.innerHTML = "<p>No accounts found.</p>";
         return;
     }
-    accountsContainer.innerHTML = ''
+
+    accountsContainer.innerHTML = '';
     accounts.forEach(account => {
         const accountHTML = createAccountCard(account);
         accountsContainer.insertAdjacentHTML('beforeend', accountHTML);
     });
-    // document.querySelector('.pagebody').style.paddingTop = "10px"; 
 }
-
-function toggleDropdown() {
-    const dropdown = document.getElementById("profileDropdown");
-    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-}
-
-document.addEventListener("click", function(event) {
-    const dropdown = document.getElementById("profileDropdown");
-    if (!event.target.closest(".profileimg")) {
-        dropdown.style.display = "none";
-    }
-});

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>My Account</title>
+    <link rel="stylesheet" href="Css/action.css">
+    <link rel="stylesheet" href="Css/mainframe.css">
+</head>
+<body>
+    <div class="maincont">
+        <div class="page">
+            <div class = "header">
+                <div class="pageName">Bank Of Utopia</div>
+                <div class="bar">
+                </div>
+                <div class="profileimg" onclick="toggleDropdown()">
+                    <img src="/icons/10-profile-picture-ideas-to-make-you-stand-out (1).jpg">
+                    <div id="profileDropdown" class="dropdown-content">
+                        <a href="/profile.html">View Profile</a>
+                    </div>
+                </div>
+            </div>
+            <div class="pagebody">
+                <div style="width: 100%; display: flex; justify-content: center; margin-top: 90px;">
+                    <form id="actionId" class="action">
+                        <span class="actionhead">
+                            Block or Unblock or Delete Account
+                        </span>
+                        <span class="actioninhead">
+                            Account Number
+                        </span>
+                        <input id="accountNumber" class="actioninput" type="text">
+                        <span class="actioninhead">
+                            Action to perform
+                        </span>
+                        <select id="actionType">
+                            <option value="BLOCK">Block</option>
+                            <option value="UNBLOCK">Unblock</option>
+                            <option value="DELETE">Delete</option>
+                        </select>
+                        <button id="actionbutton" class="actionbutton" type="submit">Perform Action</button>
+                    </form>
+                </div>
+            </div>
+    </div>
+    <script src="JavaScript/action.js"></script>
+    <script src="JavaScript/bar.js"></script>
+</body>
+</html>

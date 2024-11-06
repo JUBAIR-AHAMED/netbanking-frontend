@@ -13,6 +13,14 @@ function decodeJWT(token) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const accountNumber = urlParams.get('accountNumber');
+
+    if (accountNumber) {
+        document.getElementById('fromAccountNumber').value = accountNumber;
+    }
+
     const jwtToken = localStorage.getItem('jwt');
     const decodedToken = decodeJWT(jwtToken);
     const role = decodedToken ? decodedToken.role : null;
@@ -101,16 +109,4 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('An error occurred during transaction. Please try again.');
         }
     });
-});
-
-function toggleDropdown() {
-    const dropdown = document.getElementById("profileDropdown");
-    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-}
-
-document.addEventListener("click", function(event) {
-    const dropdown = document.getElementById("profileDropdown");
-    if (!event.target.closest(".profileimg")) {
-        dropdown.style.display = "none";
-    }
 });

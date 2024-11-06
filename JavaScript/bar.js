@@ -1,32 +1,29 @@
-function createBar(profileName) {
-    return `
+function createBar(role) {
+    let actionDivision = '';
+    
+    if (role === "EMPLOYEE" || role === "MANAGER") {
+        actionDivision = `
             <div>
-                <a href="" id="accountLink">Account</a>
+                <a href="action.html" id="actionLink">Action</a>
             </div>
-            <div>
-                <a href="transaction.html" id="transactionLink">Transaction</a>
-            </div>
-            <div>
-                <a href="statement.html" id="statementLink">Statement</a>
-            </div>
+        `;
+    }
 
-    `;  
+    return `
+        <div>
+            <a href="" id="accountLink">Account</a>
+        </div>
+        <div>
+            <a href="transaction.html" id="transactionLink">Transaction</a>
+        </div>
+        <div>
+            <a href="statement.html" id="statementLink">Statement</a>
+        </div>
+        ${actionDivision}
+    `;
 }
 
-const profileName = "Jubair Ahamed"
-
 const barContainer = document.querySelector('.bar');
-
-const barHtml = createBar(profileName)
-
-barContainer.innerHTML += barHtml
-
-const currentPage = window.location.pathname;
-
-const accountLink = document.getElementById('accountLink');
-const transactionLink = document.getElementById('transactionLink');
-const statementLink = document.getElementById('statementLink');
-
 const token = localStorage.getItem('jwt');
 let role = null;
 
@@ -35,19 +32,31 @@ if (token) {
     role = payload.role;
 }
 
+const barHtml = createBar(role);
+barContainer.innerHTML += barHtml;
+
+const accountLink = document.getElementById('accountLink');
+const transactionLink = document.getElementById('transactionLink');
+const statementLink = document.getElementById('statementLink');
+const actionLink = document.getElementById('actionLink');
+
 if (role === 'CUSTOMER') {
     accountLink.href = '/accounts.html';
-} else if(role === 'EMPLOYEE'||role === 'MANAGER'){
+} else if (role === 'EMPLOYEE' || role === 'MANAGER') {
     accountLink.href = '/accountsmanager.html';
 }
 
-
-
-// Apply the 'active' class based on the current page
-if (currentPage.includes('accounts.html')) {
+const currentPage = window.location.pathname;
+if (currentPage.includes('accounts.html') || currentPage.includes('accountsmanager.html')) {
     accountLink.classList.add('active');
 } else if (currentPage.includes('transaction.html')) {
     transactionLink.classList.add('active');
 } else if (currentPage.includes('statement.html')) {
     statementLink.classList.add('active');
+} else if (currentPage.includes('action.html')) {
+    actionLink.classList.add('active');
+}
+
+function toggleDropdown() {
+    window.location.href = 'profile.html'; 
 }

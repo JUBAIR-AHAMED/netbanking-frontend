@@ -128,15 +128,3 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     })
 })
-
-function toggleDropdown() {
-    const dropdown = document.getElementById("profileDropdown");
-    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-}
-
-document.addEventListener("click", function(event) {
-    const dropdown = document.getElementById("profileDropdown");
-    if (!event.target.closest(".profileimg")) {
-        dropdown.style.display = "none";
-    }
-});
