@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Branch | Bank of Utopia</title>
+    <link rel="stylesheet" href="Css/mainframe.css">
+    <link rel="stylesheet" href="Css/createbranch.css">
+</head>
+<body>
+    <div class="maincont">
+        <div class="page">
+            <div class="header">
+                <div class="pageName">Bank Of Utopia</div>
+                <div class="bar"></div>
+                <div class="profileimg" onclick="toggleDropdown()">
+                    <img src="/icons/10-profile-picture-ideas-to-make-you-stand-out (1).jpg" alt="Profile">
+                    <div id="profileDropdown" class="dropdown-content">
+                        <a href="/profile.html">View Profile</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pagebody">
+                <div class="create-branch-container">
+                    <h2>Create New Branch</h2>
+                    <form id="createBranchForm">
+                        <div class="form-group">
+                            <label for="name">Branch Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ifsc">IFSC Code</label>
+                            <input type="text" id="ifsc" name="ifsc" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <textarea id="address" name="address" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="employeeId">Manager Employee ID</label>
+                            <input type="text" id="employeeId" name="employeeId" required>
+                        </div>
+                        <button type="submit" class="submit-btn">Create Branch</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="JavaScript/bar.js"></script>
+    <script src="JavaScript/createbranch.js"></script>
+</body>
+</html>

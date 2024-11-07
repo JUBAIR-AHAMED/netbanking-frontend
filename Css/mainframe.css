@@ -1,9 +1,11 @@
-@font-face {
+/* @font-face {
     font-family: 'Geist';
     src: url('/Geist-v1.4.01/Geist-v1.4.01/webfonts/Geist-Regular.woff2') format('woff');
     font-weight: normal;
     font-style: normal; 
-}
+} */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 .maincont {
     display: flex;
@@ -11,7 +13,7 @@
     height: 100vh;
     max-height: 98vh;
     border-radius: 10px;
-    font-family:  "Geist", sans-serif;
+    font-family:  "Poppins", sans-serif;
 }
 
 .page {

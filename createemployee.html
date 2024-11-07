@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Employee | Bank of Utopia</title>
+    <link rel="stylesheet" href="Css/mainframe.css">
+    <link rel="stylesheet" href="Css/createemployee.css">
+</head>
+<body>
+    <div class="maincont">
+        <div class="page">
+            <div class="header">
+                <div class="pageName">Bank Of Utopia</div>
+                <div class="bar"></div>
+                <div class="profileimg" onclick="toggleDropdown()">
+                    <img src="/icons/10-profile-picture-ideas-to-make-you-stand-out (1).jpg" alt="Profile">
+                    <div id="profileDropdown" class="dropdown-content">
+                        <a href="/profile.html">View Profile</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pagebody">
+                <div class="create-employee-container">
+                    <h2>Create New Employee</h2>
+                    <form id="createEmployeeForm">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile">Mobile Number</label>
+                            <input type="tel" id="mobile" name="mobile" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth</label>
+                            <input type="date" id="dob" name="dob" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="branchId">Branch ID</label>
+                            <input type="text" id="branchId" name="branchId">
+                        </div>
+                        <div class="form-group">
+                            <label for="role">Role</label>
+                            <select id="role" name="role" required>
+                                <option value="EMPLOYEE">Employee</option>
+                                <option value="MANAGER">Manager</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select id="status" name="status" required>
+                                <option value="ACTIVE">Active</option>
+                                <option value="INACTIVE">Inactive</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="submit-btn">Create Employee</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="JavaScript/bar.js"></script>
+    <script src="JavaScript/createemployee.js"></script>
+</body>
+</html>

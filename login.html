@@ -3,67 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In</title>
+    <title>Sign In | Bank of Utopia</title>
     <link rel="stylesheet" href="Css/login.css">
 </head>
 <body>
-	<div class="left">
-	</div>
-	<div class="right">
-	<div class="name">		
-        <span>BANK OF UTOPIA</span>
-	</div>
-    <div class="container">
-        <form id="loginForm">
-        	<span>Sign In</span>
-            <div class="input-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
+    <div class="login-container">
+        <div class="left-section">
+            <div class="left-content">
+                <h1>Welcome to Bank of Utopia</h1>
+                <p>Experience seamless banking with our state-of-the-art digital platform. Secure, reliable, and always at your service.</p>
             </div>
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+        </div>
+        <div class="right-section">
+            <div class="login-form">
+                <div class="bank-logo">
+                    <h2>Bank of Utopia</h2>
+                </div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">User ID / Customer ID</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Sign In</button>
+                    <div class="additional-links">
+                        <p>Need help? <a href="#">Contact Support</a></p>
+                    </div>
+                </form>
             </div>
-            <button type="submit" class="btn" value="Login">Sign In</button>
-        </form>
+        </div>
     </div>
-	</div>
-</body>
-<script>
-    document.getElementById('loginForm').addEventListener('submit', async function (event) {
-        event.preventDefault(); 
 
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); 
 
-        try {
-            const response = await fetch('http://localhost:8080/NetBanking/userlogin', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
-            });
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
-            const result = await response.json();
+            try {
+                const response = await fetch('http://localhost:8080/NetBanking/userlogin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
 
-            if (result.status) {
-                const token = result.token
-                localStorage.setItem('jwt', token);
-                const payload = JSON.parse(atob(token.split('.')[1]));
-                const role = payload.role; 
-                if (role === 'CUSTOMER') {
-                    window.location.href = '/accounts.html';
+                const result = await response.json();
+
+                if (result.status) {
+                    const token = result.token
+                    localStorage.setItem('jwt', token);
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    const role = payload.role; 
+                    if (role === 'CUSTOMER') {
+                        window.location.href = '/accounts.html';
+                    } else {
+                        window.location.href = '/accountsmanager.html';
+                    }
                 } else {
-                    window.location.href = '/accountsmanager.html';
+                    alert(result.message);
                 }
-            } else {
-                alert(result.message);
+            } catch (error) {
+                console.error('Error during login:', error);
+                alert('An error occurred during login. Please try again.');
             }
-        } catch (error) {
-            console.error('Error during login:', error);
-            alert('An error occurred during login. Please try again.');
-        }
-    });
-</script>
+        });
+    </script>
+</body>
 </html>

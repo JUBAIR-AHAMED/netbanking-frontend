@@ -54,7 +54,7 @@ flex-direction: column;
     font-weight: bold;
     color: #333;
     margin-bottom: 20px;
-    text-align: center;
+    /* text-align: center; */
 }
 
 .transinhead {

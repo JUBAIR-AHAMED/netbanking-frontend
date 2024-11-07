@@ -235,6 +235,7 @@ function displayStatement(statement) {
     }
 
     if (statement===null||statement.length === 0) {
+        statementContainer.style="display: flex; justify-content: center;"
         statementContainer.innerHTML = "<p style=\"padding: 10px; font-size: 20px; color: darkred;\">No statement found.</p>";
         return;
     }
