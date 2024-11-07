@@ -1,10 +1,16 @@
 function createBar(role) {
-    let actionDivision = '';
+    let moreDropdown = '';
     
     if (role === "EMPLOYEE" || role === "MANAGER") {
-        actionDivision = `
-            <div>
-                <a href="action.html" id="actionLink">Action</a>
+        moreDropdown = `
+            <div class="dropdown">
+                <a href="#" class="dropbtn" id="moreDropdown">More</a>
+                <div class="dropdown-content">
+                    <a href="action.html">Action</a>
+                    <a href="createemployee.html">Create Employee</a>
+                    <a href="createbranch.html">Create Branch</a>
+                    <a href="createaccount.html">Create Account</a>
+                </div>
             </div>
         `;
     }
@@ -19,7 +25,7 @@ function createBar(role) {
         <div>
             <a href="statement.html" id="statementLink">Statement</a>
         </div>
-        ${actionDivision}
+        ${moreDropdown}
     `;
 }
 
@@ -38,7 +44,6 @@ barContainer.innerHTML += barHtml;
 const accountLink = document.getElementById('accountLink');
 const transactionLink = document.getElementById('transactionLink');
 const statementLink = document.getElementById('statementLink');
-const actionLink = document.getElementById('actionLink');
 
 if (role === 'CUSTOMER') {
     accountLink.href = '/accounts.html';
@@ -53,10 +58,34 @@ if (currentPage.includes('accounts.html') || currentPage.includes('accountsmanag
     transactionLink.classList.add('active');
 } else if (currentPage.includes('statement.html')) {
     statementLink.classList.add('active');
-} else if (currentPage.includes('action.html')) {
-    actionLink.classList.add('active');
-}
+} else if (currentPage.includes('action.html') || currentPage.includes('createemployee.html') || 
+currentPage.includes('createbranch.html') ||  currentPage.includes('createaccount.html')) {
+    document.querySelector('.dropbtn').classList.add('active');
+} 
 
 function toggleDropdown() {
     window.location.href = 'profile.html'; 
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const dropdownButton = document.getElementById('moreDropdown');
+    const dropdownContent = document.querySelector('.dropdown-content');
+
+    if (dropdownButton && dropdownContent) {
+        let isOpen = false;
+
+        dropdownButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            isOpen = !isOpen;
+            dropdownContent.style.display = isOpen ? 'block' : 'none';
+        });
+
+        // Close the dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!dropdownButton.contains(e.target) && !dropdownContent.contains(e.target)) {
+                isOpen = false;
+                dropdownContent.style.display = 'none';
+            }
+        });
+    }
+});
