@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Customer | Bank of Utopia</title>
+    <link rel="stylesheet" href="Css/login.css">
+    <style>
+        /* Additional styles to match login page aesthetics */
+        .create-customer-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #5f6368;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+        }
+
+        .additional-links {
+            margin-top: 24px;
+            text-align: center;
+            color: #5f6368;
+        }
+
+        .additional-links a {
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .additional-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="left-section">
+            <div class="left-content">
+                <h1>Create Your Customer Id Now</h1>
+                <p>Join Bank of Utopia and experience seamless, secure banking tailored to your needs.</p>
+            </div>
+        </div>
+        <div class="right-section">
+            <div class="create-customer-container">
+                <div class="bank-logo">
+                    <h2>Create Customer Profile</h2>
+                </div>
+                <form id="createCustomerForm">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number</label>
+                        <input type="tel" id="mobile" name="mobile" required 
+                               pattern="[0-9]{10}" 
+                               title="Please enter a 10-digit mobile number">
+                    </div>
+                    <div class="form-group">
+                        <label for="dateOfBirth">Date of Birth</label>
+                        <input type="date" id="dateOfBirth" name="dateOfBirth" required 
+                               max="" 
+                               onchange="validateAge(this)">
+                    </div>
+                    <div class="form-group">
+                        <label for="aadharNumber">Aadhar Number</label>
+                        <input type="text" id="aadharNumber" name="aadharNumber" required 
+                               pattern="[0-9]{12}" 
+                               title="Please enter a 12-digit Aadhar number">
+                    </div>
+                    <div class="form-group">
+                        <label for="panNumber">PAN Number</label>
+                        <input type="text" id="panNumber" name="panNumber" required 
+                               pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" 
+                               title="Please enter a valid PAN number (e.g., ABCDE1234F)">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required 
+                               minlength="8" 
+                               title="Password must be at least 8 characters long">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Create Account</button>
+                    <div class="additional-links">
+                        <p>Already a user? <a href="/login.html">Login with customer id</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set max date to today to prevent future dates
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('dateOfBirth').setAttribute('max', today);
+
+        // Age validation function
+        function validateAge(dateInput) {
+            const dob = new Date(dateInput.value);
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+
+            if (age < 18) {
+                alert('You must be at least 18 years old to create an account.');
+                dateInput.value = '';
+            }
+        }
+
+        document.getElementById('createCustomerForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            // Password confirmation check
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            const formData = {
+                password: password,
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                mobile: document.getElementById('mobile').value,
+                dateOfBirth: document.getElementById('dateOfBirth').value,
+                aadharNumber: document.getElementById('aadharNumber').value,
+                panNumber: document.getElementById('panNumber').value,
+                modifiedBy: 'SELF_REGISTRATION'
+            };
+
+            try {
+                const response = await fetch('http://localhost:8080/NetBanking/createCustomer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (result.status) {
+                    alert(`Customer created successfully! Your User ID is: ${result.customerId}`);
+                    window.location.href = '/login.html';
+                } else {
+                    alert(result.message || 'Failed to create customer');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while creating the customer.');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -30,7 +30,7 @@
                     </div>
                     <button type="submit" class="submit-btn">Sign In</button>
                     <div class="additional-links">
-                        <p>Need help? <a href="#">Contact Support</a></p>
+                        <p>New user? <a href="/createcustomer.html">Create Customer Id</a></p>
                     </div>
                 </form>
             </div>
@@ -38,6 +38,10 @@
     </div>
 
     <script>
+        token = localStorage.getItem("jwt");
+        if(token){
+            window.location.href = "accounts.html";
+        }
         document.getElementById('loginForm').addEventListener('submit', async function (event) {
             event.preventDefault(); 
 

@@ -4,13 +4,14 @@ function createStatement(transactionId, accountNumber, amount, balance, type, ti
         // accountNumber = amount > 0 ? "Deposit" : "Withdraw"
         accountNumber = "-"
     }
+    const typeColor = (type === "Withdraw" || type === "Debit") ? "red" : "green";
     return `
         <div class="valueColumn">
             <div class="columnValues">${transactionId}</div>
             <div class="columnValues">${accountNumber}</div>
             <div class="columnValues">${formatIndianCurrency(amount)}</div>
             <div class="columnValues">${formatIndianCurrency(balance)}</div>
-            <div class="columnValues">${type}</div>
+            <div class="columnValues" style="color: ${typeColor};">${type}</div>
             <div class="columnValues">${formatDate(time)}</div>
         </div>
     `
