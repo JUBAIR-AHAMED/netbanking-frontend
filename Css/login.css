@@ -7,89 +7,95 @@
     font-family: 'Poppins', sans-serif;
 }
 
-body {
-    display: flex;
-    min-height: 100vh;
-    background: #f6f8fa;
-}
-
-.login-container {
-    display: flex;
+/* Main container styling */
+.maincontainer {
+    height: 100vh;
     width: 100%;
-}
-
-.left-section {
-    flex: 1;
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-                url('https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-    background-size: cover;
-    background-position: center;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 60px;
-    color: white;
 }
 
-.left-content {
-    max-width: 500px;
-}
-
-.left-content h1 {
-    font-size: 48px;
-    margin-bottom: 20px;
-}
-
-.left-content p {
-    font-size: 18px;
-    line-height: 1.6;
-    opacity: 0.9;
-}
-
-.right-section {
-    flex: 1;
+.firsthalf {
+    width: 65%;
+    height: 100%;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 60px;
-    background: white;
 }
 
+.firsthalf img {
+    width: 70%;
+    object-fit: cover;
+}
+
+.secondhalf {
+    width: 35%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Login form styling */
 .login-form {
     width: 100%;
-    max-width: 400px;
+    max-width: 475px;
+    padding-right: 40px;
 }
 
 .bank-logo {
     margin-bottom: 40px;
-    text-align: center;
 }
 
-.bank-logo h2 {
-    font-size: 28px;
+.bank-logo h1 {
+    font-size: 60px;
     color: #1a73e8;
     font-weight: 600;
 }
 
+.bank-logo h2 {
+    font-size: 28px;
+    color: #000000;
+    font-weight: 600;
+}
+
+/* Floating label input group */
 .form-group {
+    position: relative;
     margin-bottom: 24px;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: #5f6368;
-    font-size: 14px;
-}
-
+/* Input styling */
 .form-group input {
     width: 100%;
-    padding: 12px;
+    padding: 16px 12px 12px;
     border: 1px solid #dadce0;
     border-radius: 8px;
     font-size: 16px;
     transition: all 0.3s ease;
+}
+
+/* Floating label styling as placeholder */
+.floating-label {
+    position: absolute;
+    left: 16px;
+    top: 18px;
+    color: #5f6368;
+    font-size: 16px;
+    transition: 0.3s ease all; /* Increased transition duration for slower animation */
+    pointer-events: none;
+    background-color: #ffffff;
+    padding: 0 4px;
+}
+
+/* Animation to move label on focus */
+.form-group input:focus + .floating-label,
+.form-group input:not(:placeholder-shown) + .floating-label {
+    top: -10px;
+    left: 12px;
+    font-size: 12px;
+    color: #1a73e8;
+    padding: 0 4px;
+    background-color: #ffffff;
 }
 
 .form-group input:focus {
@@ -98,6 +104,7 @@ body {
     box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
 }
 
+/* Submit button */
 .submit-btn {
     width: 100%;
     padding: 12px;
@@ -115,28 +122,17 @@ body {
     background: #1557b0;
 }
 
-.additional-links {
-    margin-top: 24px;
-    text-align: center;
-    color: #5f6368;
-}
-
-.additional-links a {
-    color: #1a73e8;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.additional-links a:hover {
-    text-decoration: underline;
-}
-
 @media (max-width: 768px) {
-    .left-section {
+    .firsthalf {
         display: none;
     }
     
-    .right-section {
-        flex: 1;
+    .secondhalf {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .login-form {
+        padding-right: 0px;
     }
 }
