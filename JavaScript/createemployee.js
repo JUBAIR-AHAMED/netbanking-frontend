@@ -40,4 +40,23 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('An error occurred while creating the employee.');
         }
     });
+    
+    const roleElement = document.getElementById('role');
+    roleElement.addEventListener('change', function() {
+        if (this.value) {
+            this.classList.add('selected');
+        } else {
+            this.classList.remove('selected');
+        }
+    });
+    
+    const statusElement = document.getElementById('status');
+    statusElement.addEventListener('change', function() {
+        if (this.value) {
+            this.classList.add('selected');
+        } else {
+            this.classList.remove('selected');
+        }
+    });
 });
+

@@ -20,48 +20,52 @@
                     </div>
                 </div>
             </div>
-
             <div class="pagebody">
-                <div class="create-employee-container">
-                    <h2>Create New Employee</h2>
+                <div class="employee-form">
+                    <div class="bank-logo">
+                        <h2>Create New Employee</h2>
+                    </div>
                     <form id="createEmployeeForm">
                         <div class="form-group">
-                            <label for="name">Full Name</label>
-                            <input type="text" id="name" name="name" required>
+                            <input type="text" id="name" name="name" required placeholder="">
+                            <label for="name" class="floating-label">Full Name</label>
                         </div>
                         <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" id="password" name="password" required>
+                            <input type="password" id="password" name="password" required placeholder="">
+                            <label for="password" class="floating-label">Password</label>
                         </div>
                         <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" required>
+                            <input type="email" id="email" name="email" required placeholder="">
+                            <label for="email" class="floating-label">Email</label>
                         </div>
                         <div class="form-group">
-                            <label for="mobile">Mobile Number</label>
-                            <input type="tel" id="mobile" name="mobile" required>
+                            <input type="tel" id="mobile" name="mobile" required placeholder="">
+                            <label for="mobile" class="floating-label">Mobile Number</label>
                         </div>
                         <div class="form-group">
-                            <label for="dob">Date of Birth</label>
-                            <input type="date" id="dob" name="dob" required>
+                            <input type="date" id="dob" name="dob" required placeholder="">
+                            <label for="dob" class="floating-label">Date of Birth</label>
                         </div>
                         <div class="form-group">
-                            <label for="branchId">Branch ID</label>
-                            <input type="text" id="branchId" name="branchId">
+                            <input type="text" id="branchId" name="branchId" placeholder="">
+                            <label for="branchId" class="floating-label">Branch ID</label>
                         </div>
                         <div class="form-group">
-                            <label for="role">Role</label>
-                            <select id="role" name="role" required>
+                            <select id="role" name="role" required style="background-color: white;">
+                                <option value="" disabled selected></option>
                                 <option value="EMPLOYEE">Employee</option>
                                 <option value="MANAGER">Manager</option>
                             </select>
+                            <label for="role" class="floating-label">Role</label>
                         </div>
                         <div class="form-group">
-                            <label for="status">Status</label>
-                            <select id="status" name="status" required>
+                            <select id="status" name="status" required style="background-color: white;">
+                                <option value="" disabled selected></option>
                                 <option value="ACTIVE">Active</option>
                                 <option value="INACTIVE">Inactive</option>
+                                <option value="Block">Block</option>
                             </select>
+                            <label for="status" class="floating-label">Status</label>
                         </div>
                         <button type="submit" class="submit-btn">Create Employee</button>
                     </form>
