@@ -67,7 +67,7 @@ function createProfile() {
 
                         <div id="branchId-container" class="info-row" style="display: none;">
                             <label for="branchId">Branch ID</label>
-                            <span class="non-editable-field" id="branchId">12345</span>
+                            <span class="non-editable-field" id="branchId"></span>
                         </div>
                     </div>
                 </div>
@@ -141,6 +141,9 @@ function displayProfile(profile) {
         document.getElementById("role").innerText = profile.role;
         roleContainer.style.display = "flex";
     }
+
+    const saveButton = document.querySelector(".save-button");
+    saveButton.addEventListener("click", () => saveChanges(profile));
 }
 
 
@@ -185,6 +188,64 @@ function saveEdit(fieldId, newValue) {
     const input = document.getElementById(fieldId);
     if (input) {
         input.replaceWith(span);
+    }
+}
+
+async function saveChanges(originalProfile) {
+    const updatedProfile = {};
+
+    // Compare each field with the original data
+    const name = document.getElementById("name").innerText;
+    if (name !== originalProfile.name) updatedProfile.name = name;
+
+    const email = document.getElementById("email").innerText;
+    if (email !== originalProfile.email) updatedProfile.email = email;
+
+    const mobile = document.getElementById("mobile").innerText;
+    if (mobile !== originalProfile.mobile) updatedProfile.mobile = mobile;
+
+    // Conditionally add optional fields
+    if (document.getElementById("aadhar-container").style.display === "flex") {
+        const aadharNumber = document.getElementById("aadhar").innerText;
+        if (aadharNumber !== originalProfile.aadharNumber) updatedProfile.aadharNumber = aadharNumber;
+    }
+
+    if (document.getElementById("pan-container").style.display === "flex") {
+        const panNumber = document.getElementById("pan").innerText;
+        if (panNumber !== originalProfile.panNumber) updatedProfile.panNumber = panNumber;
+    }
+
+    // If no changes, notify and return
+    if (Object.keys(updatedProfile).length === 0) {
+        alert("No changes detected.");
+        return;
+    }
+
+    try {
+        // Retrieve the JWT token from local storage
+        const token = localStorage.getItem("jwt");
+
+        // Send updated profile data to the server
+        const response = await fetch('http://localhost:8080/NetBanking/profile', {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(updatedProfile)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert("Profile updated successfully!");
+            fetchProfile(); // Reload the profile to reflect updated data
+        } else {
+            alert(result.message || "Failed to update profile.");
+        }
+    } catch (error) {
+        console.error(error);
+        alert("An error occurred while updating the profile.");
     }
 }
 

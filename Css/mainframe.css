@@ -147,6 +147,7 @@ a.active::after {
     background-color: black;
     width: 1874px;
     position: fixed;
+    z-index: 10;
 }
 
 .header img {

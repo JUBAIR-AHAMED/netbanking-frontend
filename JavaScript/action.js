@@ -47,4 +47,13 @@ document.addEventListener('DOMContentLoaded', function(){
             alert('Failed to load statement. Please try again.');
         }
     })
+
+    const actionElement = document.getElementById('actionType');
+    actionElement.addEventListener('change', function() {
+        if (this.value) {
+            this.classList.add('selected');
+        } else {
+            this.classList.remove('selected');
+        }
+    });
 })

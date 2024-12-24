@@ -26,30 +26,32 @@
                     <h2>Create New Account</h2>
                     <form id="createAccountForm">
                         <div class="form-group">
-                            <label for="userId">User ID</label>
-                            <input type="text" id="userId" name="userId" required>
+                            <input type="text" id="userId" name="userId" required placeholder>
+                            <label for="userId" class="floating-label">User ID</label>
                         </div>
                         <div class="form-group">
-                            <label for="branchId">Branch ID</label>
-                            <input type="text" id="branchId" name="branchId" required>
+                            <input type="text" id="branchId" name="branchId" required placeholder>
+                            <label for="branchId" class="floating-label">Branch ID</label>
                         </div>
                         <div class="form-group">
-                            <label for="accountType">Account Type</label>
                             <select id="accountType" name="accountType" required>
+                                <option value="" disabled selected></option>
                                 <option value="SAVINGS">Savings</option>
                                 <option value="CURRENT">Current</option>
                             </select>
+                            <label for="accountType" class="floating-label">Account Type</label>
                         </div>
                         <div class="form-group">
-                            <label for="balance">Initial Balance</label>
-                            <input type="number" id="balance" name="balance" required>
+                            <input type="number" id="balance" name="balance" required placeholder>
+                            <label for="balance" class="floating-label">Initial Balance</label>
                         </div>
                         <div class="form-group">
-                            <label for="status">Status</label>
                             <select id="status" name="status" required>
+                                <option value="" disabled selected></option>
                                 <option value="ACTIVE">Active</option>
-                                <option value="INACTIVE">Inactive</option>
+                                <option value="Block">Blocked</option>
                             </select>
+                            <label for="status" class="floating-label">Status</label>
                         </div>
                         <button type="submit" class="submit-btn">Create Account</button>
                     </form>

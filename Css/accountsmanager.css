@@ -1,3 +1,19 @@
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+.pagebody {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bank-logo h2 {
+    font-size: 28px;
+    color: #1a73e8;
+    font-weight: 600;
+}
+
 .search-input {
     flex-grow: 1;
     border: none;
@@ -32,7 +48,7 @@
     align-items: center;
     gap: 30px; 
     margin-top: 20px;
-    height: 82vh;
+    height: 72vh;
     overflow: auto;
 }   
 
@@ -95,11 +111,11 @@
 .search-container {
     display: flex;
     align-items: center;
-    background-color: #000000;
+    /* background-color: #000000; */
     border-radius: 24px;
     padding: 10px 20px;
-    width: 60%;
-    max-width: 600px;
+    /* width: 60%; */
+    /* max-width: 600px; */
     position: static;
 }
 
@@ -116,11 +132,13 @@
 .search-input {
     flex-grow: 1;
     border: none;
-    background: none;
+    background-color: black;
     color: rgb(255, 255, 255);
     font-size: 16px;
     padding: 10px;
     outline: none;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .search-button {
@@ -131,4 +149,47 @@
     font-size: 20px;
     padding: 0;
     margin-left: 8px;
+}
+
+.form-group {
+    position: relative;
+    margin-right: 5px;
+}
+
+/* Input styling */
+.form-group input{
+    width: 94%;
+    padding: 16px 12px; /* Adjusted padding */
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box; /* Ensures width includes padding and border */
+    transition: all 0.3s ease;
+}
+
+.floating-label {
+    position: absolute;
+    left: 16px;
+    top: 18px;
+    color: #5f6368;
+    font-size: 16px;
+    transition: 0.3s ease all;
+    pointer-events: none;
+    background-color: #ffffff;
+    padding: 0 4px;
+}
+
+/* Animation to move label on focus */
+.form-group input:focus + .floating-label,
+.form-group input:not(:placeholder-shown) + .floating-label {
+    top: -10px; /* Move label up */
+    left: 12px; /* Adjust left position */
+    font-size: 12px; /* Reduce font size */
+    color: #1a73e8; /* Change label color on focus */
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
 }

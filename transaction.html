@@ -21,45 +21,48 @@
                 </div>
             </div>
             <div class="pagebody">
-                <div class="pagecontent">
-                    <div class="contents">
-                        <div class="send-money">
-                            <h2>Send Money</h2>
-                            <form id="transactionForm">
-                                <label for="transactionType">Transaction Type</label>
-                                <select id="transactionType">
-                                    <option value="same-bank">Same Bank</option>
-                                    <option value="other-bank">Other Bank</option>
-                                </select>
-                                
-                                <div id="otherBankFields" class="hidden">
-                                    <label for="bankName">Select Bank</label>
-                                    <br/>
-                                    <select id="bankName">
-                                        <option value="" disabled selected>Select a bank</option>
-                                        <option value="bank1">Bank 1</option>
-                                        <option value="bank2">Bank 2</option>
-                                        <option value="bank3">Bank 3</option>
-                                    </select>
-                                    <br/>
-                                    <label for="ifscCode">IFSC Code</label>
-                                    <br/>
-                                    <input type="text" id="ifscCode" placeholder="Enter IFSC Code">
-                                </div>
-                                
-                                <label id="fromAccountNumberLabel" for="fromAccountNumber">Sender Account Number</label>
-                                <input type="text" id="fromAccountNumber" placeholder="Enter Sender Account Number" value="">
-        
-                                <label id="toAccountNumberLabel" for="toAccountNumber">Reciever Account Number</label>
-                                <input type="text" id="toAccountNumber" placeholder="Enter Reciever Account Number" value="">
-                                
-                                <label for="amount">Amount</label>
-                                <input type="text" id="amount" placeholder="Enter Amount" value="">
-                                
-                                <button type="submit">Submit</button>
-                            </form>
-                        </div>
+                <div class="transaction-form">
+                    <div class="bank-logo">
+                        <h2>Make Transactions</h2>
                     </div>
+                    <form id="transactionForm">
+                        <div class="form-group">
+                            <select id="transactionType" name="transactionType" required style="background-color: white;" class="selected">
+                                <option value="same-bank">Same Bank</option>
+                                <option value="other-bank">Other Bank</option>
+                            </select>
+                            <label for="transactionType" class="floating-label">Transaction Type</label>
+                        </div>
+                        
+                        <div id="otherBankFields" class="hidden">
+                            <div class="form-group">
+                                <select id="bankName" style="background-color: white;" class="selected">
+                                    <option value="" disabled selected></option>
+                                    <option value="bank1">Bank 1</option>
+                                    <option value="bank2">Bank 2</option>
+                                    <option value="bank3">Bank 3</option>
+                                </select>
+                                <label for="bankName" class="floating-label">Bank Name</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="ifscCode" placeholder="">
+                                <label for="ifscCode" class="floating-label">IFSC Code</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" id="fromAccountNumber" required placeholder="">
+                            <label for="fromAccountNumber" class="floating-label">Sender Account</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" id="toAccountNumber" required placeholder="">
+                            <label for="toAccountNumber" class="floating-label">Reciever Account</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" id="amount" required placeholder="">
+                            <label for="amount" class="floating-label">Amount</label>
+                        </div>
+                        <button class="submit-btn" type="submit">Submit</button>
+                    </form>
                 </div>
             </div>
     </div>

@@ -21,26 +21,25 @@
                 </div>
             </div>
             <div class="pagebody">
-                <div style="width: 100%; display: flex; justify-content: center; margin-top: 90px;">
-                    <form id="actionId" class="action">
-                        <span class="actionhead">
-                            Block or Unblock or Delete Account
-                        </span>
-                        <span class="actioninhead">
-                            Account Number
-                        </span>
-                        <input id="accountNumber" class="actioninput" type="text">
-                        <span class="actioninhead">
-                            Action to perform
-                        </span>
-                        <select id="actionType">
+                <form id="actionId" class="action">
+                    <div class="heading">
+                        <h2>Block or Unblock or Delete Account</h2>
+                    </div>
+                    <div class="form-group">
+                        <input id="accountNumber" type="text" required placeholder>
+                        <label for="name" class="floating-label">Account Number</label>
+                    </div>
+                    <div class="form-group">
+                        <select id="actionType" required style="background-color: white;">
+                            <option value="" disabled selected></option>
                             <option value="BLOCK">Block</option>
                             <option value="UNBLOCK">Unblock</option>
                             <option value="DELETE">Delete</option>
                         </select>
-                        <button id="actionbutton" class="actionbutton" type="submit">Perform Action</button>
-                    </form>
-                </div>
+                        <label for="name" class="floating-label">Action to perform</label>
+                    </div>
+                    <button id="actionbutton" class="submit-btn" type="submit">Perform Action</button>
+                </form>
             </div>
     </div>
     <script src="JavaScript/action.js"></script>

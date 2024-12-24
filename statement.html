@@ -20,27 +20,27 @@
                     </div>
                 </div>
             </div>
-            <div style="width: 100%; display: flex; justify-content: center; margin-top: 90px;">
+            <div style="width: 100%; display: flex; justify-content: center; margin-top: 64px;">
                 <form id="trans" class="trans">
-                    <span class="transhead">
-                        Get Statement
-                    </span>
-                    <span class="transinhead">
-                        Account Number
-                    </span>
-                    <input id="accountNumber" class="transinput" type="text">
-                    <span class="transinhead">
-                        From Date
-                    </span>
-                    <input id="fromDate" class="transinput" type="date">
-                    <span class="transinhead">
-                        To Date
-                    </span>
-                    <input id="toDate" class="transinput" type="date">
-                    <button class="transbutton" type="submit">Get Statement</button>
+                    <div class="heading">
+                        <h2>Get Statement</h2>
+                    </div>
+                    <div class="form-group">
+                        <input id="accountNumber" type="text" required placeholder>
+                        <label for="accountNumber" class="floating-label">Account Number</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="date" id="fromDate" name="dateOfBirth" required>
+                        <label for="fromDate" class="floating-label">Date of Birth</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="date" id="toDate" name="dateOfBirth" required>
+                        <label for="toDate" class="floating-label">Date of Birth</label>
+                    </div>
+                    <button class="submit-btn" type="submit">Get Statement</button>
                 </form>
             </div>
-            <div class="statement" style="width: 99%; box-shadow: 0 0px 1px 0px #000000; border-radius: 8px; height: 505px; margin-top: 20px; margin-left: 10px; margin-right: 10px;">
+            <div class="statement hidden" id="statementid" style="width: 99%; box-shadow: 0 0px 1px 0px #000000; border-radius: 8px; height: 530px; margin-left: 10px; margin-right: 10px;">
                 <div id="transactionHead">Recent Transactions</div>
                 <div class="headerColumn">
                     <div class="columnName">Transaction ID</div>

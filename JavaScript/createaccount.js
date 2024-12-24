@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             const token = localStorage.getItem('jwt');
-            const response = await fetch('http://localhost:8080/NetBanking/createAccount', {
+            const response = await fetch('http://localhost:8080/NetBanking/accounts', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -34,6 +34,24 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('Error:', error);
             alert('An error occurred while creating the account.');
+        }
+    });
+
+    const roleElement = document.getElementById('accountType');
+    roleElement.addEventListener('change', function() {
+        if (this.value) {
+            this.classList.add('selected');
+        } else {
+            this.classList.remove('selected');
+        }
+    });
+    
+    const statusElement = document.getElementById('status');
+    statusElement.addEventListener('change', function() {
+        if (this.value) {
+            this.classList.add('selected');
+        } else {
+            this.classList.remove('selected');
         }
     });
 });

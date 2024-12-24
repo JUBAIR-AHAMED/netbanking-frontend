@@ -1,7 +1,18 @@
 function createBar(role) {
     let moreDropdown = '';
     
-    if (role === "EMPLOYEE" || role === "MANAGER") {
+    if (role === "EMPLOYEE") {
+        moreDropdown = `
+            <div class="dropdown">
+                <a href="#" class="dropbtn" id="moreDropdown">More</a>
+                <div class="dropdown-content">
+                    <a href="action.html">Action</a>
+                    <a href="createaccount.html">Create Account</a>
+                    <a href="createcustomer.html">Create Customer</a>
+                </div>
+            </div>
+        `;
+    } else if (role === "EMPLOYEE" || role === "MANAGER") {
         moreDropdown = `
             <div class="dropdown">
                 <a href="#" class="dropbtn" id="moreDropdown">More</a>
@@ -10,6 +21,7 @@ function createBar(role) {
                     <a href="createemployee.html">Create Employee</a>
                     <a href="createbranch.html">Create Branch</a>
                     <a href="createaccount.html">Create Account</a>
+                    <a href="createcustomer.html">Create Customer</a>
                 </div>
             </div>
         `;

@@ -63,15 +63,14 @@ document.addEventListener('DOMContentLoaded', function() {
             toAccountNumberFieldLabel.classList.remove('hidden');
             fromAccountNumberFieldLabel.textContent = "Sender Account Number"
         } else if (transactionType === 'deposit' || transactionType === 'withdraw') {
-            console.log(transactionType)
             otherBankFields.classList.add('hidden');
             toAccountNumberField.classList.add('hidden');
             toAccountNumberFieldLabel.classList.add('hidden');
             fromAccountNumberFieldLabel.textContent = "Account Number"
-        } else {
+        } else if(transactionType === 'same-bank'){
+            otherBankFields.classList.add('hidden');
             toAccountNumberField.classList.remove('hidden');
             toAccountNumberFieldLabel.classList.remove('hidden');
-            otherBankFields.classList.add('hidden');
             fromAccountNumberFieldLabel.textContent = "Sender Account Number"
         }
     });

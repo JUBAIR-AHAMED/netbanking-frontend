@@ -125,6 +125,37 @@ function formatIndianCurrency(amount) {
     return formattedAmount;
 }
 
+document.addEventListener('DOMContentLoaded', async function(){
+    try {
+        const token = localStorage.getItem('jwt'); // Get the stored JWT token
+        if (!token) {
+            window.location.href = "/login.html";
+            return;
+        }
+        const decodedToken = decodeJWT(token);
+        const branchId = decodedToken?.branchId;
+        const response = await fetch(`http://localhost:8080/NetBanking/accounts?branchId=${branchId}&limit=2`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const data = await response.json();
+        if (data.status) {
+            if (Array.isArray(data.accounts)) {
+                displayAccounts(data.accounts);
+            } else {
+                displayAccounts(null);
+            }
+        } else {
+            alert(data.message);
+        }
+    } catch (error) {
+        console.log(error);
+        alert("Failed to retrieve accounts.");
+    }
+});
+
 document.getElementById('searchForm').addEventListener('submit', async function(event) {
     event.preventDefault();
     try {
@@ -135,9 +166,12 @@ document.getElementById('searchForm').addEventListener('submit', async function(
         }
 
         const accountNumber = document.getElementById('accountNumber').value;
-        const searchCriteria = document.getElementById('searchCriteria').value; // Get selected option
+        const userId = document.getElementById('userId').value;
+        const branchId = document.getElementById('branchId').value;
+        // const searchCriteria = document.getElementById('searchCriteria').value; // Get selected option
 
-        const response = await fetch(`http://localhost:8080/NetBanking/accounts?${searchCriteria}=${accountNumber}`, {
+
+        const response = await fetch(`http://localhost:8080/NetBanking/accounts?accountNumber=${accountNumber}&userId=${userId}&branchId=${branchId}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`

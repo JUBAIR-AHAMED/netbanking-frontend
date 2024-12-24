@@ -1,86 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 * {
     font-family: 'Poppins', sans-serif;
 }
 
-.contents {
+/* Main container styling */
+/* .maincontainer {
+    height: 100vh;
+    width: 100%;
     display: flex;
-    width: 1600px;
-    height: 89vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+} */
 
-.trans {
-    width: 40%;
-    height: 35%;
-    margin: 15px;
-    background-color: white;
-    border-radius: 15px;
+/* Employee form styling */
+.pagebody {
     display: flex;
     flex-direction: column;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px 6px #e7e7e7;
-    /* justify-content: center;
-    align-items: center; */
+    align-items: center;
 }
 
-.transhead {
-    font-size: 30px;
-    color: #004A90;
-    font-weight: 900;
-    align-self: center;
-    padding-top: 20px;
-}
-
-.transinhead{
-    font-size: 18px;
-    padding: 10px;
-    display: flex;
-    color: #004A90;
-}
-
-.transinput {
-    padding: 10px;
-    margin: 10px;
-}
-
-.transbutton {
-    width: 180px;
-    height: 40px;
-    align-self: center;
-    border: none;
-    font-size: larger;
-    color: white;
-    background-color: #004A90;
-    margin-top: 20px;
-    border-radius: 15px;
-    transition: transform 0.3s ease;
-}
-
-.transbutton:hover{
-    transform: scale(1.06);
-    background-color: #080a0a;
-    color: white;
-}
-
-
-
-/* temp */
-
-.hidden {
-    display: none;
-}
-
-.transaction-form {
+.customer-form {
     width: 100%;
     max-width: 475px;
     padding: 20px;
 }
 
 .bank-logo {
-    margin-bottom: 40px;
+    /* margin-bottom: 40px; */
     align-self: center;
 }
 
@@ -88,6 +33,10 @@
     font-size: 28px;
     color: #1a73e8;
     font-weight: 600;
+}
+
+#createCustomerForm{
+    margin-bottom: 10px;
 }
 
 /* Floating label input group */
@@ -155,4 +104,19 @@
 
 .submit-btn:hover {
     background: #1557b0;
+}
+
+@media (max-width: 768px) {
+    .firsthalf {
+        display: none;
+    }
+    
+    .secondhalf {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .employee-form {
+        padding-right: 0px;
+    }
 }

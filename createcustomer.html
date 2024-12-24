@@ -4,117 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Customer | Bank of Utopia</title>
-    <link rel="stylesheet" href="Css/login.css">
-    <style>
-        /* Additional styles to match login page aesthetics */
-        .create-customer-container {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #5f6368;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #dadce0;
-            border-radius: 4px;
-        }
-
-        .additional-links {
-            margin-top: 24px;
-            text-align: center;
-            color: #5f6368;
-        }
-
-        .additional-links a {
-            color: #1a73e8;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .additional-links a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="Css/mainframe.css">
+    <link rel="stylesheet" href="Css/createcustomer.css">
 </head>
 <body>
-    <div class="login-container">
-        <div class="left-section">
-            <div class="left-content">
-                <h1>Create Your Customer Id Now</h1>
-                <p>Join Bank of Utopia and experience seamless, secure banking tailored to your needs.</p>
-            </div>
-        </div>
-        <div class="right-section">
-            <div class="create-customer-container">
-                <div class="bank-logo">
-                    <h2>Create Customer Profile</h2>
+    <div class="maincont">
+        <div class="page">
+            <div class="header">
+                <div class="pageName">Bank Of Utopia</div>
+                <div class="bar"></div>
+                <div class="profileimg" onclick="toggleDropdown()">
+                    <img src="/icons/10-profile-picture-ideas-to-make-you-stand-out (1).jpg" alt="Profile">
+                    <div id="profileDropdown" class="dropdown-content">
+                        <a href="/profile.html">View Profile</a>
+                    </div>
                 </div>
-                <form id="createCustomerForm">
-                    <div class="form-group">
-                        <label for="name">Full Name</label>
-                        <input type="text" id="name" name="name" required>
+            </div>
+            <div class="pagebody">
+                <div class="customer-form">
+                    <div class="bank-logo">
+                        <h2>Create New Customer</h2>
                     </div>
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="mobile">Mobile Number</label>
-                        <input type="tel" id="mobile" name="mobile" required 
-                               pattern="[0-9]{10}" 
-                               title="Please enter a 10-digit mobile number">
-                    </div>
-                    <div class="form-group">
-                        <label for="dateOfBirth">Date of Birth</label>
-                        <input type="date" id="dateOfBirth" name="dateOfBirth" required 
-                               max="" 
-                               onchange="validateAge(this)">
-                    </div>
-                    <div class="form-group">
-                        <label for="aadharNumber">Aadhar Number</label>
-                        <input type="text" id="aadharNumber" name="aadharNumber" required 
-                               pattern="[0-9]{12}" 
-                               title="Please enter a 12-digit Aadhar number">
-                    </div>
-                    <div class="form-group">
-                        <label for="panNumber">PAN Number</label>
-                        <input type="text" id="panNumber" name="panNumber" required 
-                               pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" 
-                               title="Please enter a valid PAN number (e.g., ABCDE1234F)">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required 
-                               minlength="8" 
-                               title="Password must be at least 8 characters long">
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmPassword">Confirm Password</label>
-                        <input type="password" id="confirmPassword" name="confirmPassword" required>
-                    </div>
-                    <button type="submit" class="submit-btn">Create Account</button>
-                    <div class="additional-links">
-                        <p>Already a user? <a href="/login.html">Login with customer id</a></p>
-                    </div>
-                </form>
+                    <form id="createCustomerForm">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" placeholder required>
+                            <label class="floating-label" for="name">Full Name</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" placeholder required>
+                            <label class="floating-label" for="email">Email Address</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" id="mobile" name="mobile" required 
+                            pattern="[0-9]{10}" 
+                            title="Please enter a 10-digit mobile number" placeholder>
+                            <label class="floating-label" for="mobile">Mobile Number</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="date" id="dateOfBirth" name="dateOfBirth" required 
+                            max=""  placeholder
+                            onchange="validateAge(this)">
+                            <label class="floating-label" for="dateOfBirth">Date of Birth</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="aadharNumber" name="aadharNumber" required 
+                            pattern="[0-9]{12}" 
+                            title="Please enter a 12-digit Aadhar number" placeholder>
+                            <label class="floating-label" for="aadharNumber">Aadhar Number</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="panNumber" name="panNumber" required 
+                            pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" 
+                            title="Please enter a valid PAN number (e.g., ABCDE1234F)" placeholder>
+                            <label class="floating-label" for="panNumber">PAN Number</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="password" name="password" required 
+                            minlength="8" 
+                            title="Password must be at least 8 characters long" placeholder>
+                            <label class="floating-label" for="password">Password</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="confirmPassword" name="confirmPassword" required placeholder>
+                            <label class="floating-label" for="confirmPassword">Confirm Password</label>
+                        </div>
+                        <button type="submit" class="submit-btn">Create Account</button>
+                    </form>
             </div>
         </div>
     </div>
-
+    </div>
     <script>
         // Set max date to today to prevent future dates
         const today = new Date().toISOString().split('T')[0];
@@ -157,14 +116,15 @@
                 dateOfBirth: document.getElementById('dateOfBirth').value,
                 aadharNumber: document.getElementById('aadharNumber').value,
                 panNumber: document.getElementById('panNumber').value,
-                modifiedBy: 'SELF_REGISTRATION'
             };
 
             try {
+                const token = localStorage.getItem('jwt');
                 const response = await fetch('http://localhost:8080/NetBanking/createCustomer', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify(formData)
                 });
@@ -183,5 +143,6 @@
             }
         });
     </script>
+    <script src="JavaScript/bar.js"></script>
 </body>
 </html>

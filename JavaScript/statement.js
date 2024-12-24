@@ -47,30 +47,6 @@ function formatIndianCurrency(amount) {
     return formattedAmount;
 }
 
-function displayStatement(statement) {
-    const statementContainer = document.querySelector('#statementInsert');
-
-    if (statement == null || statement.length === 0) {
-        statementContainer.innerHTML = "<p style=\"padding: 10px; font-size: 20px; color: darkred;\">No statement found.</p>";
-        return;
-    }
-
-    statementContainer.innerHTML = '';
-
-    statement.forEach(statement => {
-        let statementHTML = createStatement(
-            statement.referenceNumber,
-            statement.transactionAccount,
-            statement.transactionAmount,
-            statement.balance,
-            statement.type,
-            statement.timestamp
-        );
-
-        statementContainer.insertAdjacentHTML('beforeend', statementHTML);
-    });
-}
-
 document.addEventListener('DOMContentLoaded', function(){
     const urlParams = new URLSearchParams(window.location.search);
         
@@ -128,4 +104,29 @@ document.addEventListener('DOMContentLoaded', function(){
             alert('Failed to load statement. Please try again.');
         }
     })
+
+    function displayStatement(statement) {
+        const statementContainer = document.querySelector('#statementInsert');
+        
+        document.getElementById('statementid').classList.remove('hidden')
+        if (statement == null || statement.length === 0) {
+            statementContainer.innerHTML = "<p style=\"padding: 10px; font-size: 20px; color: darkred;\">No statement found.</p>";
+            return;
+        }
+    
+        statementContainer.innerHTML = '';
+    
+        statement.forEach(statement => {
+            let statementHTML = createStatement(
+                statement.referenceNumber,
+                statement.transactionAccount,
+                statement.transactionAmount,
+                statement.balance,
+                statement.type,
+                statement.timestamp
+            );
+    
+            statementContainer.insertAdjacentHTML('beforeend', statementHTML);
+        });
+    }
 })

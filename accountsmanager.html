@@ -23,14 +23,30 @@
             </div>
 
             <div class="pagebody">
-                <!-- Search bar -->
+                <div class="bank-logo">
+                    <h2>Search Accounts</h2>
+                </div>
                 <form class="search-container" id="searchForm">
-                    <select id="searchCriteria" class="search-select">
+                    <!-- <select id="searchCriteria" class="search-select">
                         <option value="accountNumber">Account Number</option>
                         <option value="userId">User Id</option>
                         <option value="branchId">Branch ID</option>
-                    </select>
-                    <input type="text" id="accountNumber" class="search-input" placeholder="Search accounts...">
+                    </select> -->
+                    <div class="form-group">
+                        <input type="text" id="accountNumber" placeholder="">
+                        <label for="accountNumber" class="floating-label">Account Number</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="userId" placeholder="">
+                        <label for="userId" class="floating-label">User Id</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="branchId" placeholder="">
+                        <label for="branchId" class="floating-label">Branch Id</label>
+                    </div>
+                    <!-- <input type="text" id="accountNumber" class="search-input" placeholder="Account Number"> -->
+                    <!-- <input type="text" id="userId" class="search-input" placeholder="User Id"> -->
+                    <!-- <input type="text" id="branchId" class="search-input" placeholder="Branch Id"> -->
                     <button type="submit" class="search-button">&#128269;</button>
                 </form>
             </div>

@@ -1,7 +1,6 @@
 .statement {
     width: 96%;
     height: 45%;
-    margin: 15px;
     border-radius: 15px;
     background-color: white;
     align-self: center;
@@ -40,65 +39,91 @@ flex-direction: column;
 
 /* Form Styling */
 #trans {
-    background-color: #f9f9fb;
     padding: 20px;
     width: 700px;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 475px;
 }
 
-.transhead {
-    display: block;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
-    /* text-align: center; */
+* {
+    font-family: 'Poppins', sans-serif;
 }
 
-.transinhead {
-    display: block;
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 8px;
-    font-weight: 500;
+.heading h2 {
+    font-size: 28px;
+    color: #1a73e8;
+    font-weight: 600;
 }
 
-.transinput {
+/* Floating label input group */
+.form-group {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+/* Input styling */
+.form-group input,
+.form-group select  {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    font-size: 1rem;
-    color: #333;
-    background-color: #f0f0f5;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    box-sizing: border-box;
-    transition: all 0.2s ease-in-out;
+    padding: 16px 12px; /* Adjusted padding */
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box; /* Ensures width includes padding and border */
+    transition: all 0.3s ease;
 }
 
-.transinput:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+/* Floating label styling as placeholder */
+.floating-label {
+    position: absolute;
+    left: 16px;
+    top: 18px;
+    color: #5f6368;
+    font-size: 16px;
+    transition: 0.3s ease all;
+    pointer-events: none;
+    background-color: #ffffff;
+    padding: 0 4px;
 }
 
-.transbutton {
+/* Animation to move label on focus */
+.form-group input:focus + .floating-label,
+.form-group input:not(:placeholder-shown) + .floating-label,
+.form-group textarea:focus + .floating-label,
+.form-group textarea:not(:placeholder-shown) + .floating-label,
+.form-group select:focus + .floating-label,
+.form-group select.selected + .floating-label {
+    top: -10px; /* Move label up */
+    left: 12px; /* Adjust left position */
+    font-size: 12px; /* Reduce font size */
+    color: #1a73e8; /* Change label color on focus */
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+}
+
+/* Submit button */
+.submit-btn {
     width: 100%;
     padding: 12px;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #fff;
-    background-color: #000000;
+    background: #1a73e8;
+    color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
+    transition: background 0.3s ease;
 }
 
-.transbutton:hover {
-    background-color: #2563eb;
+.submit-btn:hover {
+    background: #1557b0;
 }
-
 /* .trans {
     display: flex;
     flex-direction: column;
@@ -186,4 +211,8 @@ flex-direction: column;
     font-size: 25px;
     padding-left: 17px;
     padding-top: 18px;
+}
+
+.hidden {
+    visibility: hidden;
 }
