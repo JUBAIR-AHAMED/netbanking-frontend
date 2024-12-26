@@ -30,7 +30,7 @@ function createAccountCard(accountNumber, balance, accountType, ifsc, branchName
                         <span class="balancerupee">₹ ${formatIndianCurrency(balance)}</span>
                     </div>
                     <div class="dateOfOpening">
-                        <span>Branch Name</span>
+                        <span>Branch Id</span>
                         <span class="date">${branchName}</span>
                     </div>
                 </div>
@@ -220,7 +220,8 @@ function displayAccounts(index) {
         accounts[index].balance,
         accounts[index].accountType,
         accounts[index].ifsc,
-        accounts[index].name
+        // accounts[index].name,
+        accounts[index].branchId
     );
     accountsContainer.innerHTML = accountHTML;
     fetchStatement(accounts[index].accountNumber)

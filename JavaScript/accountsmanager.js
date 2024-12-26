@@ -61,30 +61,11 @@ function createAccountCard(account) {
     }
 
     return `
-        <div class="card">
-            <div class="cardBody">
-                <div>
-                    <h3>Account Details</h3>
-                    <div class="cardBodyItem"  class="card-number"><span>Account Number: </span>${formatAccountNumber(accountNumber)}</div>
-                    <div class="cardBodyItem" ><span>Account Type: </span>${accountType}</div>
-                    <div class="cardBodyItem" ><span>IFSC: </span>${ifsc}</div>
-                    <div class="cardBodyItem" ><span>Date of Opening: </span>${formatDate(dateOfOpening)}</div>
-                    <div class="cardBodyItem" ><span>Status: </span>${capitalizeFirstLetter(status)}</div>
-                </div>
-                <div>
-                    <h3>Branch Details</h3>
-                    <div class="cardBodyItem" ><span>Branch Id: </span>${branchId}</div>
-                    <div class="cardBodyItem" ><span>Branch Name: </span>${name}</div>
-                    <div class="cardBodyItem" ><span>Branch Address: </span>${address}</div >
-                </div>
-                <div style="width: 350px;">
-                    <h3>Balance</h3>
-                    <div class="cardBodyItem balance-amount">₹ ${formatIndianCurrency(balance)}</div>
-                </div>
-                <div class="card-footer">
-                    ${actionsContent}
-                </div>
-            </div>
+        <div class="valueColumn">
+            <div class="columnValues">${accountNumber}</div>
+            <div class="columnValues">${accountType}</div>
+            <div class="columnValues">${branchId}</div>
+            <div class="columnValues">${status}</div>
         </div>
     `;
 }
@@ -194,7 +175,7 @@ function formatIndianCurrency(amount) {
 // });
 
 // function displayAccounts(accounts) {
-//     const accountsContainer = document.querySelector('.cardcontent');
+//     const accountsContainer = document.querySelector('.accountInsert');
     
 //     if (accounts == null || accounts.length === 0) {
 //         accountsContainer.innerHTML = "<p>No accounts found.</p>";
@@ -211,7 +192,7 @@ function formatIndianCurrency(amount) {
 
 document.addEventListener('DOMContentLoaded', function () {
     let currentPage = 1; // Current page
-    const limit = 5; // Items per page
+    const limit = 8; // Items per page
     let totalPages = 1; // Total pages will be calculated later
 
     let searchCriteria = {}; 
@@ -286,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to display accounts in the UI
     function displayAccounts(accounts) {
-        const accountsContainer = document.querySelector('.cardcontent');
+        const accountsContainer = document.querySelector('.accountInsert');
 
         if (!accounts || accounts.length === 0) {
             accountsContainer.innerHTML = "<p>No accounts found.</p>";
@@ -304,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function updatePaginationControls() {
         const paginationContainer = document.getElementById('paginationControls');
         if (!paginationContainer) {
-            const cardContentDiv = document.querySelector('.cardcontent');
+            const cardContentDiv = document.querySelector('.accountInsert');
             const controlsDiv = document.createElement('div');
             controlsDiv.id = 'paginationControls';
             controlsDiv.style.display = 'flex';

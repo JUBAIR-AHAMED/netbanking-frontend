@@ -114,7 +114,7 @@ function displayProfile(profile) {
     document.getElementById("name").innerText = profile.name;
     document.getElementById("email").innerText = profile.email;
     document.getElementById("mobile").innerText = profile.mobile;
-    document.getElementById("dob").innerText = profile.dateOfBirth;
+    document.getElementById("dob").innerText = formatDate(profile.dateOfBirth);
     document.getElementById("status").innerText = profile.status;
     
     // Conditionally display Aadhar, PAN, and Branch ID
@@ -147,6 +147,13 @@ function displayProfile(profile) {
     saveButton.addEventListener("click", () => saveChanges(profile));
 }
 
+function formatDate(timestamp) {
+    const date = new Date(timestamp);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
+}
 
 // Toggles editing of a specific field
 function toggleEdit(fieldId) {
