@@ -71,7 +71,7 @@ if (currentPage.includes('accounts.html') || currentPage.includes('accountsmanag
 } else if (currentPage.includes('statement.html')) {
     statementLink.classList.add('active');
 } else if (currentPage.includes('action.html') || currentPage.includes('createemployee.html') || 
-currentPage.includes('createbranch.html') ||  currentPage.includes('createaccount.html')) {
+currentPage.includes('createbranch.html') ||  currentPage.includes('createaccount.html')||currentPage.includes('createcustomer.html')) {
     document.querySelector('.dropbtn').classList.add('active');
 } 
 

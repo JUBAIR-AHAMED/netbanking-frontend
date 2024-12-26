@@ -18,7 +18,7 @@ function createProfile() {
                         <div class="info-row">
                             <label for="name">Name</label>
                             <div class="editable-field">
-                                <span id="name">John Doe</span>
+                                <span id="name"></span>
                                 <button class="edit-icon" onclick="toggleEdit('name')"><img src="icons/pen.png" alt="edit-logo"></button>
                             </div>
                         </div>
@@ -26,7 +26,7 @@ function createProfile() {
                         <div class="info-row">
                             <label for="email">Email</label>
                             <div class="editable-field">
-                                <span id="email">john.doe@example.com</span>
+                                <span id="email"></span>
                                 <button class="edit-icon" onclick="toggleEdit('email')"><img src="icons/pen.png" alt="edit-logo"></button>
                             </div>
                         </div>
@@ -34,30 +34,30 @@ function createProfile() {
                         <div class="info-row">
                             <label for="mobile">Mobile</label>
                             <div class="editable-field">
-                                <span id="mobile">123-456-7890</span>
+                                <span id="mobile"></span>
                                 <button class="edit-icon" onclick="toggleEdit('mobile')"><img src="icons/pen.png" alt="edit-logo"></button>
                             </div>
                         </div>
 
                         <div class="info-row">
                             <label for="dob">Date of Birth</label>
-                            <span class="non-editable-field" id="dob">01.01.1990</span>
+                            <span class="non-editable-field" id="dob"></span>
                         </div>
 
                         <div class="info-row">
                             <label for="status">Status</label>
-                            <span class="non-editable-field" id="status">Active</span>
+                            <span class="non-editable-field" id="status"></span>
                         </div>
 
                         <!-- Conditional Fields for Aadhar, PAN, Branch ID -->
                         <div id="aadhar-container" class="info-row" style="display: none;">
                             <label for="aadhar">Aadhar Number</label>
-                            <span class="non-editable-field" id="aadhar">XXXX-XXXX-XXXX</span>
+                            <span class="non-editable-field" id="aadhar"></span>
                         </div>
 
                         <div id="pan-container" class="info-row" style="display: none;">
                             <label for="pan">PAN Number</label>
-                            <span class="non-editable-field" id="pan">XXXXX1234X</span>
+                            <span class="non-editable-field" id="pan"></span>
                         </div>
 
                         <div id="role-container" class="info-row" style="display: none;">
@@ -116,10 +116,11 @@ function displayProfile(profile) {
     document.getElementById("mobile").innerText = profile.mobile;
     document.getElementById("dob").innerText = profile.dateOfBirth;
     document.getElementById("status").innerText = profile.status;
-
+    
     // Conditionally display Aadhar, PAN, and Branch ID
     if (profile.aadharNumber) {
         const aadharContainer = document.getElementById("aadhar-container");
+        console.log(profile.aadharNumber)
         document.getElementById("aadhar").innerText = profile.aadharNumber;
         aadharContainer.style.display = "flex";
     }
@@ -205,7 +206,7 @@ async function saveChanges(originalProfile) {
     if (mobile !== originalProfile.mobile) updatedProfile.mobile = mobile;
 
     // Conditionally add optional fields
-    if (document.getElementById("aadhar-container").style.display === "flex") {
+    if (document.getElementById("aadhar").style.display === "flex") {
         const aadharNumber = document.getElementById("aadhar").innerText;
         if (aadharNumber !== originalProfile.aadharNumber) updatedProfile.aadharNumber = aadharNumber;
     }

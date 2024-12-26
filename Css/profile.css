@@ -20,14 +20,14 @@
 
 .profile-header h1 {
     font-size: 24px;
-    color: #333;
+    color: #1a73e8;
 }
 
 .save-button {
     background-color: #28a745;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 25px;
     padding: 10px 15px;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -80,6 +80,10 @@
     padding: 10px 0;
     border-bottom: 1px solid #f0f0f0;
     height: 30px;
+}
+
+.info-row label{
+    font-weight: 600;
 }
 
 .info-row:last-child {

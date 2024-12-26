@@ -1,4 +1,4 @@
-// Function to decode JWT token and extract role and branchId
+// // Function to decode JWT token and extract role and branchId
 function decodeJWT(token) {
     try {
         const base64Url = token.split('.')[1];
@@ -125,85 +125,276 @@ function formatIndianCurrency(amount) {
     return formattedAmount;
 }
 
-document.addEventListener('DOMContentLoaded', async function(){
-    try {
-        const token = localStorage.getItem('jwt'); // Get the stored JWT token
-        if (!token) {
-            window.location.href = "/login.html";
-            return;
-        }
-        const decodedToken = decodeJWT(token);
-        const branchId = decodedToken?.branchId;
-        const response = await fetch(`http://localhost:8080/NetBanking/accounts?branchId=${branchId}&limit=2`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        const data = await response.json();
-        if (data.status) {
-            if (Array.isArray(data.accounts)) {
-                displayAccounts(data.accounts);
-            } else {
-                displayAccounts(null);
-            }
-        } else {
-            alert(data.message);
-        }
-    } catch (error) {
-        console.log(error);
-        alert("Failed to retrieve accounts.");
-    }
-});
+// document.addEventListener('DOMContentLoaded', async function(){
+//     try {
+//         const token = localStorage.getItem('jwt'); // Get the stored JWT token
+//         if (!token) {
+//             window.location.href = "/login.html";
+//             return;
+//         }
+//         const decodedToken = decodeJWT(token);
+//         const branchId = decodedToken?.branchId;
+//         const response = await fetch(`http://localhost:8080/NetBanking/accounts?branchId=${branchId}&limit=2`, {
+//             method: 'GET',
+//             headers: {
+//                 'Authorization': `Bearer ${token}`
+//             }
+//         });
+//         const data = await response.json();
+//         if (data.status) {
+//             if (Array.isArray(data.accounts)) {
+//                 displayAccounts(data.accounts);
+//             } else {
+//                 displayAccounts(null);
+//             }
+//         } else {
+//             alert(data.message);
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         alert("Failed to retrieve accounts.");
+//     }
+// });
 
-document.getElementById('searchForm').addEventListener('submit', async function(event) {
-    event.preventDefault();
-    try {
-        const token = localStorage.getItem('jwt'); // Get the stored JWT token
-        if (!token) {
-            window.location.href = "/login.html";
-            return;
-        }
+// document.getElementById('searchForm').addEventListener('submit', async function(event) {
+//     event.preventDefault();
+//     try {
+//         const token = localStorage.getItem('jwt'); // Get the stored JWT token
+//         if (!token) {
+//             window.location.href = "/login.html";
+//             return;
+//         }
 
-        const accountNumber = document.getElementById('accountNumber').value;
-        const userId = document.getElementById('userId').value;
-        const branchId = document.getElementById('branchId').value;
-        // const searchCriteria = document.getElementById('searchCriteria').value; // Get selected option
+//         const accountNumber = document.getElementById('accountNumber').value;
+//         const userId = document.getElementById('userId').value;
+//         const branchId = document.getElementById('branchId').value;
+//         // const searchCriteria = document.getElementById('searchCriteria').value; // Get selected option
 
 
-        const response = await fetch(`http://localhost:8080/NetBanking/accounts?accountNumber=${accountNumber}&userId=${userId}&branchId=${branchId}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        const data = await response.json();
-        if (data.status) {
-            if (Array.isArray(data.accounts)) {
-                displayAccounts(data.accounts);
-            } else {
-                displayAccounts(null);
-            }
-        } else {
-            alert(data.message);
-        }
-    } catch (error) {
-        console.log(error);
-        alert("Failed to retrieve accounts.");
-    }
-});
+//         const response = await fetch(`http://localhost:8080/NetBanking/accounts?accountNumber=${accountNumber}&userId=${userId}&branchId=${branchId}`, {
+//             method: 'GET',
+//             headers: {
+//                 'Authorization': `Bearer ${token}`
+//             }
+//         });
+//         const data = await response.json();
+//         if (data.status) {
+//             if (Array.isArray(data.accounts)) {
+//                 displayAccounts(data.accounts);
+//             } else {
+//                 displayAccounts(null);
+//             }
+//         } else {
+//             alert(data.message);
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         alert("Failed to retrieve accounts.");
+//     }
+// });
 
-function displayAccounts(accounts) {
-    const accountsContainer = document.querySelector('.cardcontent');
+// function displayAccounts(accounts) {
+//     const accountsContainer = document.querySelector('.cardcontent');
     
-    if (accounts == null || accounts.length === 0) {
-        accountsContainer.innerHTML = "<p>No accounts found.</p>";
-        return;
+//     if (accounts == null || accounts.length === 0) {
+//         accountsContainer.innerHTML = "<p>No accounts found.</p>";
+//         return;
+//     }
+
+//     accountsContainer.innerHTML = '';
+//     accounts.forEach(account => {
+//         const accountHTML = createAccountCard(account);
+//         accountsContainer.insertAdjacentHTML('beforeend', accountHTML);
+//     });
+// }
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    let currentPage = 1; // Current page
+    const limit = 5; // Items per page
+    let totalPages = 1; // Total pages will be calculated later
+
+    let searchCriteria = {}; 
+
+    // Function to fetch total count based on search criteria
+    async function fetchTotalCount(criteria) {
+        try {
+            const token = localStorage.getItem('jwt');
+            const url = new URL('http://localhost:8080/NetBanking/accounts');
+            url.searchParams.append('count', 'true');
+            if (criteria.accountNumber) url.searchParams.append('accountNumber', criteria.accountNumber);
+            if (criteria.userId) url.searchParams.append('userId', criteria.userId);
+            if (criteria.branchId) url.searchParams.append('branchId', criteria.branchId);
+
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
+            if (data.status) {
+                const totalCount = data.count || 0; // Total accounts count
+                totalPages = Math.ceil(totalCount / limit); // Calculate total pages
+            } else {
+                alert(data.message);
+            }
+        } catch (error) {
+            console.error('Error fetching total count:', error);
+            alert('Failed to load total count. Please try again.');
+        }
     }
 
-    accountsContainer.innerHTML = '';
-    accounts.forEach(account => {
-        const accountHTML = createAccountCard(account);
-        accountsContainer.insertAdjacentHTML('beforeend', accountHTML);
+    // Function to fetch accounts for the current page
+    async function fetchAccounts() {
+        try {
+            const token = localStorage.getItem('jwt');
+            if (!token) {
+                window.location.href = "/login.html";
+                return;
+            }
+
+            const url = new URL('http://localhost:8080/NetBanking/accounts');
+            url.searchParams.append('currentPage', currentPage);
+            url.searchParams.append('limit', limit);
+            if (searchCriteria.accountNumber) url.searchParams.append('accountNumber', searchCriteria.accountNumber);
+            if (searchCriteria.userId) url.searchParams.append('userId', searchCriteria.userId);
+            if (searchCriteria.branchId) url.searchParams.append('branchId', searchCriteria.branchId);
+
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
+            if (data.status) {
+                if (Array.isArray(data.accounts)) {
+                    displayAccounts(data.accounts);
+                } else {
+                    displayAccounts(null);
+                }
+                updatePaginationControls();
+            } else {
+                alert(data.message);
+            }
+        } catch (error) {
+            console.error('Error fetching accounts:', error);
+            alert("Failed to retrieve accounts.");
+        }
+    }
+
+    // Function to display accounts in the UI
+    function displayAccounts(accounts) {
+        const accountsContainer = document.querySelector('.cardcontent');
+
+        if (!accounts || accounts.length === 0) {
+            accountsContainer.innerHTML = "<p>No accounts found.</p>";
+            return;
+        }
+
+        accountsContainer.innerHTML = ''; // Clear previous accounts
+        accounts.forEach(account => {
+            const accountHTML = createAccountCard(account);
+            accountsContainer.insertAdjacentHTML('beforeend', accountHTML);
+        });
+    }
+
+    // Function to update pagination controls
+    function updatePaginationControls() {
+        const paginationContainer = document.getElementById('paginationControls');
+        if (!paginationContainer) {
+            const cardContentDiv = document.querySelector('.cardcontent');
+            const controlsDiv = document.createElement('div');
+            controlsDiv.id = 'paginationControls';
+            controlsDiv.style.display = 'flex';
+            controlsDiv.style.justifyContent = 'center';
+            controlsDiv.style.marginTop = '20px';
+            cardContentDiv.parentElement.appendChild(controlsDiv);
+        }
+
+        paginationContainer.innerHTML = `
+            <button id="prevPage" ${currentPage === 1 ? 'disabled' : ''}>Prev</button>
+            <span style="margin: 0 15px;">Page ${currentPage} of ${totalPages}</span>
+            <button id="nextPage" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
+        `;
+
+        document.getElementById('prevPage').addEventListener('click', function () {
+            if (currentPage > 1) {
+                currentPage--;
+                fetchAccounts();
+            }
+        });
+
+        document.getElementById('nextPage').addEventListener('click', function () {
+            if (currentPage < totalPages) {
+                currentPage++;
+                fetchAccounts();
+            }
+        });
+    }
+
+    // Event listener for the search form
+    document.getElementById('searchForm').addEventListener('submit', async function (event) {
+        event.preventDefault(); // Prevent default form submission
+    
+        // Get the input values
+        const accountNumber = document.getElementById('accountNumber').value.trim();
+        const userId = document.getElementById('userId').value.trim();
+        const branchId = document.getElementById('branchId').value.trim();
+    
+        // Validation: At least one input must be provided
+        if (!accountNumber && !userId && !branchId) {
+            alert("Please enter at least one search criterion.");
+            return;
+        }
+    
+        try {
+            // Set the search criteria
+            searchCriteria.accountNumber = accountNumber;
+            searchCriteria.userId = userId;
+            searchCriteria.branchId = branchId;
+    
+            // Reset to the first page
+            currentPage = 1;
+    
+            // Fetch total count and accounts
+            await fetchTotalCount(searchCriteria);
+            await fetchAccounts();
+        } catch (error) {
+            console.error('Error during search:', error);
+            alert("Failed to retrieve accounts. Check console for details.");
+        }
     });
-}
+    
+
+    // Initialize with no filters (default behavior)
+    async function initialize() {
+        try {
+            const token = localStorage.getItem('jwt'); // Get the stored JWT token
+            if (!token) {
+                window.location.href = "/login.html";
+                return;
+            }
+    
+            const decodedToken = decodeJWT(token); // Decode the JWT token
+            const branchId = decodedToken?.branchId; // Extract the branchId
+    
+            if (!branchId) {
+                alert("Branch ID not found in token.");
+                return;
+            }
+    
+            // Set the initial search criteria to the branchId
+            searchCriteria = { branchId };
+    
+            // Fetch total count and accounts based on the branchId
+            await fetchTotalCount(searchCriteria);
+            await fetchAccounts();
+        } catch (error) {
+            console.error('Error during initialization:', error);
+            alert("Failed to initialize accounts. Please check the console for details.");
+        }
+    }
+    initialize();
+});
