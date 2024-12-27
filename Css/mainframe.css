@@ -268,3 +268,7 @@ a.active::after {
     height: 2px;
     background-color: aquamarine;
 }
+
+.hidden {
+    visibility: hidden;
+}

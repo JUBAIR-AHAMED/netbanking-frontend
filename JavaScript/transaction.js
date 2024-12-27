@@ -52,29 +52,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('transactionType').addEventListener('change', function(event) {
         const transactionType = event.target.value;
+        console.log("Selected Transaction Type:", transactionType); // Debugging
         const otherBankFields = document.getElementById('otherBankFields');
         const toAccountNumberField = document.getElementById('toAccountNumber');
-        const toAccountNumberFieldLabel = document.getElementById('toAccountNumberLabel');
         const fromAccountNumberFieldLabel = document.getElementById('fromAccountNumberLabel');
-
+    
         if (transactionType === 'other-bank') {
+            console.log("Handling other-bank transaction");
             otherBankFields.classList.remove('hidden');
             toAccountNumberField.classList.remove('hidden');
-            toAccountNumberFieldLabel.classList.remove('hidden');
-            fromAccountNumberFieldLabel.textContent = "Sender Account Number"
+            toAccountNumberField.classList.add('required');
+            fromAccountNumberFieldLabel.textContent = "Sender Account Number";
         } else if (transactionType === 'deposit' || transactionType === 'withdraw') {
+            console.log("Handling deposit or withdraw transaction");
             otherBankFields.classList.add('hidden');
+            toAccountNumberField.classList.remove('required');
             toAccountNumberField.classList.add('hidden');
-            toAccountNumberFieldLabel.classList.add('hidden');
-            fromAccountNumberFieldLabel.textContent = "Account Number"
-        } else if(transactionType === 'same-bank'){
+            fromAccountNumberFieldLabel.textContent = "Account Number";
+        } else if (transactionType === 'same-bank') {
+            console.log("Handling same-bank transaction");
             otherBankFields.classList.add('hidden');
+            toAccountNumberField.classList.add('required');
             toAccountNumberField.classList.remove('hidden');
-            toAccountNumberFieldLabel.classList.remove('hidden');
-            fromAccountNumberFieldLabel.textContent = "Sender Account Number"
+            fromAccountNumberFieldLabel.textContent = "Sender Account Number";
+        } else {
+            console.log("Unknown transaction type selected");
         }
     });
-
+    
     document.getElementById('transactionForm').addEventListener('submit', async function(event) {
         event.preventDefault();
 
