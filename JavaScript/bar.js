@@ -6,18 +6,20 @@ function createBar(role) {
             <div class="dropdown">
                 <a href="#" class="dropbtn" id="moreDropdown">More</a>
                 <div class="dropdown-content">
-                    <a href="action.html">Action</a>
+                    <a href="usermanager.html">Customers</a>
                     <a href="createaccount.html">Create Account</a>
                     <a href="createcustomer.html">Create Customer</a>
                 </div>
             </div>
         `;
-    } else if (role === "EMPLOYEE" || role === "MANAGER") {
+    } else if (role === "MANAGER") {
         moreDropdown = `
             <div class="dropdown">
                 <a href="#" class="dropbtn" id="moreDropdown">More</a>
                 <div class="dropdown-content">
-                    <a href="action.html">Action</a>
+                    <a href="customermanager.html">Customers</a>
+                    <a href="employeemanager.html">Employee</a>
+                    <a href="branchmanager.html">Branchs</a>
                     <a href="createemployee.html">Create Employee</a>
                     <a href="createbranch.html">Create Branch</a>
                     <a href="createaccount.html">Create Account</a>
@@ -71,7 +73,9 @@ if (currentPage.includes('accounts.html') || currentPage.includes('accountsmanag
 } else if (currentPage.includes('statement.html')) {
     statementLink.classList.add('active');
 } else if (currentPage.includes('action.html') || currentPage.includes('createemployee.html') || 
-currentPage.includes('createbranch.html') ||  currentPage.includes('createaccount.html')||currentPage.includes('createcustomer.html')) {
+currentPage.includes('createbranch.html') ||  currentPage.includes('createaccount.html')||
+currentPage.includes('createcustomer.html')||currentPage.includes('branchmanager.html')||
+currentPage.includes('branchmanager.html')||currentPage.includes('employeemanager.html')||currentPage.includes('customermanager.html')) {
     document.querySelector('.dropbtn').classList.add('active');
 } 
 

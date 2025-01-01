@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account</title>
+<!-- <link rel="stylesheet" href="Css/accounts.css"> -->
+<link rel="stylesheet" href="Css/mainframe.css">
+<link rel="stylesheet" href="Css/customermanager.css">
+</head>
+<body>
+    <div class="maincont">
+        <div class="page">
+            <div>
+                <div class="header">
+                    <div class="pageName">Bank Of Utopia</div>
+                    <div class="bar"></div>
+                    <div class="profileimg" onclick="toggleDropdown()">
+                        <img src="/icons/10-profile-picture-ideas-to-make-you-stand-out (1).jpg" alt="Profile">
+                        <div id="profileDropdown" class="dropdown-content">
+                            <a href="/profile.html">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="pagebody">
+                    <div class="bank-logo">
+                        <h2>Search Employee</h2>
+                    </div>
+                    <form class="search-container" id="searchForm">
+                        <div class="form-group">
+                            <input type="text" id="userId" placeholder="">
+                            <label for="userId" class="floating-label">User Id</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="name" placeholder="">
+                            <label for="name" class="floating-label">Name</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="email" placeholder="">
+                            <label for="email" class="floating-label">Email</label>
+                        </div>
+                        <button type="submit" class="search-button">Search</button>
+                    </form>
+                </div>
+                
+                <div class="accounts" id="accountsid">
+                    <div id="accountsHead">Branch</div>
+                    <div class="headerColumn">
+                        <div class="columnName">User ID</div>
+                        <div class="columnName">Name</div>
+                        <div class="columnName">Phone Number</div>
+                        <div class="columnName">Mail</div>
+                        <div class="columnName">Role</div>
+                    </div>
+                    <div class="accountInsert">
+                    </div>
+                </div>
+            </div>
+            <div id="paginationControls"></div> 
+        </div>
+    </div>
+    <script src="JavaScript/employeemanager.js"></script>
+    <script src="JavaScript/bar.js"></script>
+</body>
+</html>

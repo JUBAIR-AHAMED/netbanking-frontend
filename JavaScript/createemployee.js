@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
 
         const formData = {
-            username: document.getElementById('name').value,
+            name: document.getElementById('name').value,
             password: document.getElementById('password').value,
             email: document.getElementById('email').value,
             mobile: document.getElementById('mobile').value,

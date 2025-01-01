@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             const token = localStorage.getItem('jwt');
-            const response = await fetch('http://localhost:8080/NetBanking/createBranch', {
+            const response = await fetch('http://localhost:8080/NetBanking/branch', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
