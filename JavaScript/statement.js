@@ -167,11 +167,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         try {
             const token = localStorage.getItem('jwt');
-            const response = await fetch('http://localhost:8080/NetBanking/statement', {
+            const response = await fetch('http://localhost:8080/NetBanking/transaction', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'action': 'GET'
                 },
                 body: JSON.stringify({ accountNumber, fromDate, toDate, count: true }) // Request only the count
             });
@@ -198,11 +199,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         try {
             const token = localStorage.getItem('jwt');
-            const response = await fetch('http://localhost:8080/NetBanking/statement', {
+            const response = await fetch('http://localhost:8080/NetBanking/transaction', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'action': 'GET'
                 },
                 body: JSON.stringify({ accountNumber, fromDate, toDate, currentPage, limit }) // Pass currentPage and limit
             });

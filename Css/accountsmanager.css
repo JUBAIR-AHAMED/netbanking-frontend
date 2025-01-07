@@ -426,7 +426,7 @@
     margin: 5% auto;
     padding: 20px;
     border-radius: 8px;
-    width: 22%; /* Responsive width */
+    width: 27%; /* Responsive width */
     max-width: 600px; /* Max width to avoid overflowing */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     position: relative;
@@ -484,4 +484,80 @@
     .modal-content {
         width: 90%;
     }
+}
+
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    height: 30px;
+}
+
+.info-row label{
+    font-weight: 600;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.label {
+    font-weight: bold;
+    color: #555;
+}
+
+.editable-field {
+    display: flex;
+    align-items: center;
+}
+
+.edit-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+    color: #007bff;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.edit-icon img {
+    width: 20px;
+    transition: transform 0.3s ease;
+}
+
+.edit-icon img:hover {
+    transform: scale(1.1);
+}
+
+
+.non-editable-field {
+    color: #777;
+}
+
+.editable-input {
+    font-size: 16px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+}
+
+.save-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 150px;
+    align-self: center;
+}
+
+.save-button:hover {
+    background-color: #218838;
 }

@@ -70,9 +70,6 @@ function createAccountCard(account) {
             <div class="columnValues">${name}</div>
             <div class="columnValues branchValue">
                 ${mobile}
-                <div class="moreBranch" style="position: fixed; z-index: 2; width: 17%; align-self: center; cursor: pointer; justify-items: flex-end;" data-branch='${JSON.stringify(account)}'>
-                    <img class="eye-logo-branch moreBranch" src="icons/eye-svgrepo-com.svg" alt="view icon" data-branch='${JSON.stringify(account)}'>
-                </div>
             </div>
             <div class="columnValues" style="display: flex;">${email}
             </div>
@@ -102,18 +99,20 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const token = localStorage.getItem('jwt');
             const url = new URL('http://localhost:8080/NetBanking/user');
-            url.searchParams.append('count', 'true');
-            if (criteria.userId) url.searchParams.append('userId', criteria.userId);
-            if (criteria.name) url.searchParams.append('name', criteria.name);
-            if (criteria.email) url.searchParams.append('email', criteria.email);
-            url.searchParams.append('userType', 'employee');
-            url.searchParams.append('moreDetails', 'false');
+            criteria.count = true;
+            criteria.userId = criteria.userId;
+            criteria.name = criteria.name;
+            criteria.email = criteria.email;
+            criteria.userType = 'employee';
+            criteria.moreDetails = false;
 
             const response = await fetch(url, {
-                method: 'GET',
+                method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                    'Authorization': `Bearer ${token}`,
+                    'action': 'GET'
+                },
+                body: JSON.stringify(criteria)
             });
             const data = await response.json();
             if (data.status) {
@@ -138,19 +137,22 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             const url = new URL('http://localhost:8080/NetBanking/user');
-            url.searchParams.append('currentPage', currentPage);
-            url.searchParams.append('limit', limit);
-            if (searchCriteria.userId) url.searchParams.append('userId', searchCriteria.userId);
-            if (searchCriteria.name) url.searchParams.append('name', searchCriteria.name);
-            if (searchCriteria.email) url.searchParams.append('email', searchCriteria.email);
-            url.searchParams.append('userType', 'employee');
-            url.searchParams.append('moreDetails', 'false');
+            const criteria  = {};
+            criteria.currentPage = currentPage;
+            criteria.limit = limit;
+            criteria.userId = searchCriteria.userId;
+            criteria.name = searchCriteria.name;
+            criteria.email = searchCriteria.email;
+            criteria.userType = 'employee';
+            criteria.moreDetails = false;
 
             const response = await fetch(url, {
-                method: 'GET',
+                method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                    'Authorization': `Bearer ${token}`,
+                    'action': 'GET',
+                },
+                body: JSON.stringify(criteria)
             });
             const data = await response.json();
             if (data.status) {

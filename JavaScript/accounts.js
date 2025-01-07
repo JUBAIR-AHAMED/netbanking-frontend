@@ -127,10 +127,11 @@ async function fetchAccounts() {
         // }
         // console.log(role)
 
-        const response = await fetch('http://localhost:8080/NetBanking/accounts', {
-            method: 'GET',
+        const response = await fetch('http://localhost:8080/NetBanking/account', {
+            method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'action': 'GET'
             }
         });
         const data = await response.json();
@@ -176,11 +177,12 @@ async function fetchStatement(accountNumber) {
     const limit = 7
     try {
         const token = localStorage.getItem('jwt')
-        const response = await fetch('http://localhost:8080/NetBanking/statement', {
+        const response = await fetch('http://localhost:8080/NetBanking/transaction', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'action': 'GET'
             },
             body: JSON.stringify({ accountNumber, limit })
         });

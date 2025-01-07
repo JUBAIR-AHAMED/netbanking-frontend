@@ -13,41 +13,202 @@ function decodeJWT(token) {
     }
 }
 
-function showAccountDetails(account) {
+function formatDate(timestamp) {
+    const date = new Date(timestamp);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const year = date.getFullYear();
+
+    return `${day}.${month}.${year}`;
+}
+
+function formatIndianCurrency(amount) {
+    const isNegative = amount < 0;
+
+    const absoluteAmount = Math.abs(amount);
+
+    const [integerPart, decimalPart = ''] = absoluteAmount.toString().split('.');
+
+    const formattedDecimalPart = decimalPart.padEnd(2, '0').slice(0, 2);
+    const lastThreeDigits = integerPart.slice(-3);
+    const otherDigits = integerPart.slice(0, -3);
+    const formattedIntegerPart = otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + (otherDigits ? ',' : '') + lastThreeDigits;
+
+    const formattedAmount = `${formattedIntegerPart}.${formattedDecimalPart}`;
+
+    return formattedAmount;
+}
+
+function showCustomerDetails(user) {
     const modal = document.getElementById("accountModal");
     const modalContent = document.getElementById("modalContent");
-
+    modal.dataset.customer = JSON.stringify(user);
     // Format account details
     modalContent.innerHTML = `
-        <p><strong>Account Number:</strong> ${account.accountNumber}</p>
-        <p><strong>Account Type:</strong> ${account.accountType}</p>
-        <p><strong>Balance:</strong> ${formatIndianCurrency(account.balance)}</p>
-        <p><strong>Date of Opening:</strong> ${formatDate(account.dateOfOpening)}</p>
-        <p><strong>Account Holder:</strong> ${account.name}</p>
-        <p><strong>Branch ID:</strong> ${account.branchId}</p>
-        <p><strong>Status:</strong> ${account.status}</p>
+    <div class="info-row">
+            <label for="userIdField">User ID</label>
+            <div class="non-editable-field">
+                <span id="userIdField">${user.userId}</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <label for="username">User Name</label>
+            <div class="editable-field">
+                <span id="username">${user.name}</span>
+                <button class="edit-icon" onclick="toggleEdit('username')"><img src="icons/pen.png" alt="edit-logo"></button>
+            </div>
+        </div>
+        <div class="info-row">
+            <label for="mail">Email</label>
+            <div class="editable-field">
+                <span id="mail">${user.email}</span>
+                <button class="edit-icon" onclick="toggleEdit('mail')"><img src="icons/pen.png" alt="edit-logo"></button>
+            </div>
+        </div>
+        <div class="info-row">
+            <label for="status">Status:</label>
+            <div class="editable-field">
+                <span id="status">${user.status}</span>
+                <button class="edit-icon" onclick="toggleEdit('status')"><img src="icons/pen.png" alt="edit-logo"></button>
+            </div>
+        </div>
+        <div class="info-row">
+            <label for="dateOfBirth">Date Of Birth</label>
+            <div class="editable-field">
+                <span id="dateOfBirth">${user.dateOfBirth}</span>
+                <button class="edit-icon" onclick="toggleEdit('dateOfBirth')"><img src="icons/pen.png" alt="edit-logo"></button>
+            </div>
+        </div>
+        <div class="info-row">
+            <label for="aadharNumber">Aadhar Number</label>
+            <div class="editable-field">
+                <span id="aadharNumber">${user.aadharNumber}</span>
+                <button class="edit-icon" onclick="toggleEdit('aadharNumber')"><img src="icons/pen.png" alt="edit-logo"></button>
+            </div>
+        </div>
+        <div class="info-row">
+            <label for="panNumber">Pan Number</label>
+            <div class="editable-field">
+                <span id="panNumber">${user.panNumber}</span>
+                <button class="edit-icon" onclick="toggleEdit('panNumber')"><img src="icons/pen.png" alt="edit-logo"></button>
+            </div>
+        </div>
+        <button class="save-button">Save Changes</button>    
     `;
 
     // Show the modal
     modal.style.display = "block";
 }
 
-function showBranchDetails(branch) {
-    console.log(branch)
-    const modal = document.getElementById("branchModal");
-    const modalContent = document.getElementById("branchModalContent");
+// function toggleEdit(fieldId) {
+//     const field = document.getElementById(fieldId);
 
-    // Format branch details
-    modalContent.innerHTML = `
-        <p><strong>Branch ID:</strong> ${branch[0].branchId}</p>
-        <p><strong>Branch Name:</strong> ${branch[0].name}</p>
-        <p><strong>Address:</strong> ${branch[0].address}</p>
-        <p><strong>IFSC:</strong> ${branch[0].ifsc}</p>
-        <p><strong>Manager ID:</strong> ${branch[0].employeeId}</p>
-    `;
+//     // Check if field is a span and toggle to input
+//     if (field && field.tagName === 'SPAN') {
+//         const currentText = field.innerText;
 
-    // Show the modal
-    modal.style.display = "block";
+//         // Create an input field
+//         const input = document.createElement('input');
+//         input.type = 'text';
+//         input.value = currentText;
+//         input.classList.add('editable-input');
+//         input.id = fieldId;
+
+//         // Replace span with input field
+//         field.replaceWith(input);
+
+//         // Focus the input for immediate editing
+//         input.focus();
+
+//         // Save on blur or enter key
+//         input.addEventListener('blur', () => {
+//             if(document.getElementById(fieldId)) {
+//                   saveEdit(fieldId, input.value);
+//             }
+//         });
+//        input.addEventListener('keypress', (e) => {
+//            if (e.key === 'Enter') {
+//                 if(document.getElementById(fieldId)) {
+//                    saveEdit(fieldId, input.value);
+//                }
+//            }
+//        });
+
+//     }
+// }
+
+function toggleEdit(fieldId) {
+    const field = document.getElementById(fieldId);
+
+    // Check if field is a span and toggle to input
+    if (field && field.tagName === 'SPAN') {
+        const currentText = field.innerText;
+
+        let input;
+        if(fieldId === 'status') {
+            input = document.createElement('select');
+            input.id = fieldId;
+            input.classList.add('editable-input');
+            const options = ['ACTIVE','BLOCKED','INACTIVE'];
+            options.forEach(option => {
+                 const optionElement = document.createElement('option');
+                 optionElement.value = option;
+                 optionElement.text = option;
+                 if (option === currentText) {
+                     optionElement.selected = true;
+                 }
+                  input.appendChild(optionElement)
+            })
+        }
+        else if (fieldId === 'dateOfBirth') {
+            input = document.createElement('input');
+            input.type = 'date';
+            input.value = new Date(Date.parse(currentText.split(".").reverse().join("-"))).toISOString().split('T')[0];; // Set value to current date
+
+            input.classList.add('editable-input');
+            input.id = fieldId;
+        }
+         else {
+             input = document.createElement('input');
+             input.type = 'text';
+             input.value = currentText;
+             input.classList.add('editable-input');
+             input.id = fieldId;
+        }
+
+        // Replace span with input field
+        field.replaceWith(input);
+
+        // Focus the input for immediate editing
+        input.focus();
+
+        // Save on blur or enter key
+        input.addEventListener('blur', () => {
+            if(document.getElementById(fieldId)) {
+                  saveEdit(fieldId, input.value);
+            }
+        });
+       input.addEventListener('keypress', (e) => {
+           if (e.key === 'Enter') {
+                if(document.getElementById(fieldId)) {
+                   saveEdit(fieldId, input.value);
+               }
+           }
+       });
+
+    }
+}
+
+
+function saveEdit(fieldId, newValue) {
+    // Create a span to replace input
+    const span = document.createElement('span');
+    span.id = fieldId;
+    span.innerText = newValue;
+    const input = document.getElementById(fieldId);
+    if (input) {
+        input.replaceWith(span);
+    }
 }
 
 function createAccountCard(account) {
@@ -67,12 +228,7 @@ function createAccountCard(account) {
                 </div>
             </div>
             <div class="columnValues">${name}</div>
-            <div class="columnValues branchValue">
-                ${mobile}
-                <div class="moreBranch" style="position: fixed; z-index: 2; width: 17%; align-self: center; cursor: pointer; justify-items: flex-end;" data-branch='${JSON.stringify(account)}'>
-                    <img class="eye-logo-branch moreBranch" src="icons/eye-svgrepo-com.svg" alt="view icon" data-branch='${JSON.stringify(account)}'>
-                </div>
-            </div>
+            <div class="columnValues branchValue">${mobile}</div>
             <div class="columnValues" style="display: flex;">${email}
             </div>
         </div>
@@ -100,18 +256,17 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const token = localStorage.getItem('jwt');
             const url = new URL('http://localhost:8080/NetBanking/user');
-            url.searchParams.append('count', 'true');
-            if (criteria.userId) url.searchParams.append('userId', criteria.userId);
-            if (criteria.name) url.searchParams.append('name', criteria.name);
-            if (criteria.email) url.searchParams.append('email', criteria.email);
-            url.searchParams.append('userType', 'customer');
-            url.searchParams.append('moreDetails', 'false');
+            criteria.count = true;
+            criteria.userType = 'customer';
+            criteria.moreDetails = false;
 
             const response = await fetch(url, {
-                method: 'GET',
+                method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                    'Authorization': `Bearer ${token}`,
+                    'action': 'GET'
+                },
+                body: JSON.stringify(criteria)
             });
             const data = await response.json();
             if (data.status) {
@@ -136,19 +291,22 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             const url = new URL('http://localhost:8080/NetBanking/user');
-            url.searchParams.append('currentPage', currentPage);
-            url.searchParams.append('limit', limit);
-            if (searchCriteria.userId) url.searchParams.append('userId', searchCriteria.userId);
-            if (searchCriteria.name) url.searchParams.append('name', searchCriteria.name);
-            if (searchCriteria.email) url.searchParams.append('email', searchCriteria.email);
-            url.searchParams.append('userType', 'customer');
-            url.searchParams.append('moreDetails', 'false');
+            criteria = {}
+            criteria.currentPage = currentPage;
+            criteria.limit = limit;
+            criteria.userId = searchCriteria.userId;
+            criteria.name = searchCriteria.name;
+            criteria.email = searchCriteria.email;
+            criteria.userType = 'customer';
+            criteria.moreDetails = 'true';
 
             const response = await fetch(url, {
-                method: 'GET',
+                method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                    'Authorization': `Bearer ${token}`,
+                    'action': 'GET'
+                },
+                body: JSON.stringify(criteria)
             });
             const data = await response.json();
             if (data.status) {
@@ -288,7 +446,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <div id="accountModal" class="modal">
                 <div class="modal-content">
                     <span class="close-button" id="closeModal">&times;</span>
-                    <h2>Account Details</h2>
+                    <h2>Customer Details</h2>
                     <div id="modalContent"></div>
                 </div>
             </div>
@@ -326,14 +484,72 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    async function saveChanges() {
+        const modal = document.getElementById("accountModal");
+        const customerString = modal.dataset.customer; 
+        const originalProfile = JSON.parse(customerString); 
+        const updatedProfile = {};
+    
+        // Compare each field with the original data
+        const username = document.getElementById("username").innerText;
+        if (username !== originalProfile.name) updatedProfile.name = username;
+    
+        const mail = document.getElementById("mail").innerText;
+        if (mail !== originalProfile.email) updatedProfile.email = mail;
+    
+        const status = document.getElementById("status").innerText;
+        if (status !== originalProfile.status) updatedProfile.status = status;
+
+        const dob = document.getElementById("dateOfBirth").innerText;
+        if (dob !== originalProfile.dateOfBirth) updatedProfile.dateOfBirth = dob;
+
+        const aadharNumber = document.getElementById("aadharNumber").innerText;
+        if (aadharNumber != originalProfile.aadharNumber) updatedProfile.aadharNumber = aadharNumber;
+        
+        if (Object.keys(updatedProfile).length === 0) {
+            alert("No changes detected.");
+            return;
+        }
+        const userId = document.getElementById("userIdField").innerText;
+        updatedProfile.key = userId
+        try {
+            // Retrieve the JWT token from local storage
+            const token = localStorage.getItem("jwt");
+    
+            // Send updated profile data to the server
+            const response = await fetch('http://localhost:8080/NetBanking/user', {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(updatedProfile)
+            });
+    
+            const result = await response.json();
+    
+            if (response.ok) {
+                alert("Profile updated successfully!");
+            } else {
+                alert(result.message || "Failed to update profile.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("An error occurred while updating the profile.");
+        }
+    }
+
     // Event listener to show account details when eye icon is clicked
     document.addEventListener("click", function(event) {
         if (event.target.classList.contains("more")) {
             const account = JSON.parse(event.target.getAttribute("data-account"));
-            showAccountDetails(account);
+            showCustomerDetails(account);
+        }
+
+        if(event.target.classList.contains("save-button")){
+            saveChanges();
         }
     });
-
     // document.addEventListener("click", async function(event) {
     //     if (event.target.classList.contains("moreBranch")) {
     //         // const branchId = JSON.parse(event.target.getAttribute("data-branch"));

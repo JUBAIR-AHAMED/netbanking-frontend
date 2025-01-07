@@ -13,6 +13,23 @@ function decodeJWT(token) {
     }
 }
 
+function formatIndianCurrency(amount) {
+    const isNegative = amount < 0;
+
+    const absoluteAmount = Math.abs(amount);
+
+    const [integerPart, decimalPart = ''] = absoluteAmount.toString().split('.');
+
+    const formattedDecimalPart = decimalPart.padEnd(2, '0').slice(0, 2)
+    const lastThreeDigits = integerPart.slice(-3);
+    const otherDigits = integerPart.slice(0, -3);
+    const formattedIntegerPart = otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + (otherDigits ? ',' : '') + lastThreeDigits;
+
+    const formattedAmount = `${formattedIntegerPart}.${formattedDecimalPart}`;
+
+    return formattedAmount;
+}
+
 function showAccountDetails(account) {
     const modal = document.getElementById("accountModal");
     const modalContent = document.getElementById("modalContent");
@@ -39,11 +56,36 @@ function showBranchDetails(branch) {
 
     // Format branch details
     modalContent.innerHTML = `
-        <p><strong>Branch ID:</strong> ${branch[0].branchId}</p>
-        <p><strong>Branch Name:</strong> ${branch[0].name}</p>
-        <p><strong>Address:</strong> ${branch[0].address}</p>
-        <p><strong>IFSC:</strong> ${branch[0].ifsc}</p>
-        <p><strong>Manager ID:</strong> ${branch[0].employeeId}</p>
+        <div class="info-row">
+            <label>Branch ID</label>
+            <div class="non-editable-field">
+                <span>${branch.branchId}</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <label>Branch Name</label>
+            <div class="non-editable-field">
+                <span>${branch.name}</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <label>Address</label>
+            <div class="non-editable-field">
+                <span>${branch.address}</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <label>IFSC</label>
+            <div class="non-editable-field">
+                <span>${branch.ifsc}</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <label>Manager ID</label>
+            <div class="non-editable-field">
+                <span>${branch.employeeId}</span>
+            </div>
+        </div>
     `;
 
     // Show the modal
@@ -76,9 +118,6 @@ function createAccountCard(account) {
             <div class="columnValues">${name}</div>
             <div class="columnValues branchValue">
                 ${employeeId}
-                <div class="moreBranch" style="position: fixed; z-index: 2; width: 17%; align-self: center; cursor: pointer; justify-items: flex-end;" data-branch='${JSON.stringify(account)}'>
-                    <img class="eye-logo-branch moreBranch" src="icons/eye-svgrepo-com.svg" alt="view icon" data-branch='${JSON.stringify(account)}'>
-                </div>
             </div>
             <div class="columnValues" style="display: flex;">${ifsc}
             </div>
@@ -107,16 +146,15 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const token = localStorage.getItem('jwt');
             const url = new URL('http://localhost:8080/NetBanking/branch');
-            url.searchParams.append('count', 'true');
-            if (criteria.branchId) url.searchParams.append('branchId', criteria.branchId);
-            if (criteria.employeeId) url.searchParams.append('employeeId', criteria.employeeId);
-            if (criteria.ifsc) url.searchParams.append('ifsc', criteria.ifsc);
-
+            criteria.count = true;
+            
             const response = await fetch(url, {
-                method: 'GET',
+                method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                    'Authorization': `Bearer ${token}`,
+                    'action': 'GET'
+                },
+                body: JSON.stringify(criteria)
             });
             const data = await response.json();
             if (data.status) {
@@ -141,17 +179,21 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             const url = new URL('http://localhost:8080/NetBanking/branch');
-            url.searchParams.append('currentPage', currentPage);
-            url.searchParams.append('limit', limit);
-            if (searchCriteria.branchId) url.searchParams.append('branchId', searchCriteria.branchId);
-            if (searchCriteria.employeeId) url.searchParams.append('employeeId', searchCriteria.employeeId);
-            if (searchCriteria.ifsc) url.searchParams.append('ifsc', searchCriteria.ifsc);
+            const criteria = {}
+
+            criteria.currentPage = currentPage;
+            criteria.limit = limit;
+            criteria.branchId = searchCriteria.branchId;
+            criteria.employeeId = searchCriteria.employeeId;
+            criteria.ifsc = searchCriteria.ifsc;
 
             const response = await fetch(url, {
-                method: 'GET',
+                method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                    'Authorization': `Bearer ${token}`,
+                    'action': 'GET'
+                },
+                body: JSON.stringify(criteria)
             });
             const data = await response.json();
             if (data.status) {
@@ -333,20 +375,24 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener("click", function(event) {
         if (event.target.classList.contains("more")) {
             const account = JSON.parse(event.target.getAttribute("data-account"));
-            showAccountDetails(account);
+            showBranchDetails(account);
         }
     });
 
     async function fetchBranchs(branchId) {
         const token = localStorage.getItem('jwt');
-        const url = `http://localhost:8080/NetBanking/branch?branchId=${branchId}`;
-    
+        const url = `http://localhost:8080/NetBanking/branch`;
+        criteria = {}
+        criteria.branchId = branchId;
+
         try {
             const response = await fetch(url, {
-                method: 'GET',
+                method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                    'Authorization': `Bearer ${token}`,
+                    'action': 'GET'
+                },
+                body: JSON.stringify(criteria)
             });
     
             const data = await response.json();

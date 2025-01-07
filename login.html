@@ -39,16 +39,16 @@
         document.getElementById('loginForm').addEventListener('submit', async function (event) {
             event.preventDefault(); 
 
-            const username = document.getElementById('username').value;
+            const userId = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
             try {
-                const response = await fetch('http://localhost:8080/NetBanking/userlogin', {
+                const response = await fetch('http://localhost:8080/NetBanking/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ username, password })
+                    body: JSON.stringify({ userId, password })
                 });
 
                 const result = await response.json();

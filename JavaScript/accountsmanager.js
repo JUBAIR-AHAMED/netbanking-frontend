@@ -17,19 +17,107 @@ function showAccountDetails(account) {
     const modal = document.getElementById("accountModal");
     const modalContent = document.getElementById("modalContent");
     console.log(account)
+    modal.dataset.account = JSON.stringify(account);
     // Format account details
     modalContent.innerHTML = `
-        <p><strong>Account Number:</strong> ${account.accountNumber}</p>
-        <p><strong>Account Type:</strong> ${account.accountType}</p>
-        <p><strong>Balance:</strong> ${formatIndianCurrency(account.balance)}</p>
-        <p><strong>Date of Opening:</strong> ${formatDate(account.dateOfOpening)}</p>
-        <p><strong>Account Holder:</strong> ${account.name}</p>
-        <p><strong>Branch ID:</strong> ${account.branchId}</p>
-        <p><strong>Status:</strong> ${account.status}</p>
+        <div class="info-row">
+            <label for="accountNumberField">Account Number</label>
+            <div class="non-editable-field">
+                <span id="accountNumberField">${account.accountNumber}</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <label for="balance">Balance</label>
+            <div class="non-editable-field">
+                <span id="accountNumberField">${formatIndianCurrency(account.balance)}</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <label for="dateOfOpening">Date of Opening</label>
+            <div class="non-editable-field">
+                <span id="dateOfOpening">${formatDate(account.dateOfOpening)}</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <label for="name">Account Holder</label>
+            <div class="non-editable-field">
+                <span id="name">${account.name}</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <label for="accountType">Account Type</label>
+            <div class="editable-field">
+                <span id="accountType">${account.accountType}</span>
+                <button class="edit-icon" onclick="toggleEdit('accountType')"><img src="icons/pen.png" alt="edit-logo"></button>
+            </div>
+        </div>
+        <div class="info-row">
+            <label for="branchId">Branch ID:</label>
+            <div class="editable-field">
+                <span id="branchIdField">${account.branchId}</span>
+                <button class="edit-icon" onclick="toggleEdit('branchIdField')"><img src="icons/pen.png" alt="edit-logo"></button>
+            </div>
+            </div>
+            <div class="info-row">
+            <label for="status">Status:</label>
+            <div class="editable-field">
+                <span id="status">${account.status}</span>
+                <button class="edit-icon" onclick="toggleEdit('status')"><img src="icons/pen.png" alt="edit-logo"></button>
+            </div>
+        </div>
+        <button class="save-button">Save Changes</button>
     `;
 
     // Show the modal
     modal.style.display = "block";
+}
+
+function toggleEdit(fieldId) {
+    const field = document.getElementById(fieldId);
+
+    // Check if field is a span and toggle to input
+    if (field && field.tagName === 'SPAN') {
+        const currentText = field.innerText;
+
+        // Create an input field
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = currentText;
+        input.classList.add('editable-input');
+        input.id = fieldId;
+
+        // Replace span with input field
+        field.replaceWith(input);
+
+        // Focus the input for immediate editing
+        input.focus();
+
+        // Save on blur or enter key
+        input.addEventListener('blur', () => {
+            if(document.getElementById(fieldId)) {
+                  saveEdit(fieldId, input.value);
+            }
+        });
+       input.addEventListener('keypress', (e) => {
+           if (e.key === 'Enter') {
+                if(document.getElementById(fieldId)) {
+                   saveEdit(fieldId, input.value);
+               }
+           }
+       });
+
+    }
+}
+
+function saveEdit(fieldId, newValue) {
+    // Create a span to replace input
+    const span = document.createElement('span');
+    span.id = fieldId;
+    span.innerText = newValue;
+    const input = document.getElementById(fieldId);
+    if (input) {
+        input.replaceWith(span);
+    }
 }
 
 function showBranchDetails(branch) {
@@ -39,11 +127,36 @@ function showBranchDetails(branch) {
 
     // Format branch details
     modalContent.innerHTML = `
-        <p><strong>Branch ID:</strong> ${branch[0].branchId}</p>
-        <p><strong>Branch Name:</strong> ${branch[0].name}</p>
-        <p><strong>Address:</strong> ${branch[0].address}</p>
-        <p><strong>IFSC:</strong> ${branch[0].ifsc}</p>
-        <p><strong>Manager ID:</strong> ${branch[0].employeeId}</p>
+        <div class="info-row">
+            <label>Branch ID</label>
+            <div class="non-editable-field">
+                <span>${branch[0].branchId}</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <label>Branch Name</label>
+            <div class="non-editable-field">
+                <span>${branch[0].name}</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <label>Address</label>
+            <div class="non-editable-field">
+                <span>${branch[0].address}</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <label>IFSC</label>
+            <div class="non-editable-field">
+                <span>${branch[0].ifsc}</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <label>Manager ID</label>
+            <div class="non-editable-field">
+                <span>${branch[0].employeeId}</span>
+            </div>
+        </div>
     `;
 
     // Show the modal
@@ -197,19 +310,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to fetch total count based on search criteria
     async function fetchTotalCount(criteria) {
+        console.log(criteria)
         try {
             const token = localStorage.getItem('jwt');
-            const url = new URL('http://localhost:8080/NetBanking/accounts');
-            url.searchParams.append('count', 'true');
-            if (criteria.accountNumber) url.searchParams.append('accountNumber', criteria.accountNumber);
-            if (criteria.userId) url.searchParams.append('userId', criteria.userId);
-            if (criteria.branchId) url.searchParams.append('branchId', criteria.branchId);
+            const url = new URL('http://localhost:8080/NetBanking/account');
+            criteria.count = true;
 
             const response = await fetch(url, {
-                method: 'GET',
+                method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                    'Authorization': `Bearer ${token}`,
+                    'action': 'GET'
+                },
+                body: JSON.stringify(criteria)
             });
             const data = await response.json();
             if (data.status) {
@@ -233,18 +346,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            const url = new URL('http://localhost:8080/NetBanking/accounts');
-            url.searchParams.append('currentPage', currentPage);
-            url.searchParams.append('limit', limit);
-            if (searchCriteria.accountNumber) url.searchParams.append('accountNumber', searchCriteria.accountNumber);
-            if (searchCriteria.userId) url.searchParams.append('userId', searchCriteria.userId);
-            if (searchCriteria.branchId) url.searchParams.append('branchId', searchCriteria.branchId);
+            const url = new URL('http://localhost:8080/NetBanking/account');
+            const criteria = {}
+            criteria.currentPage = currentPage;
+            criteria.limit = limit;
+            if (searchCriteria.accountNumber) criteria.accountNumber = searchCriteria.accountNumber;
+            if (searchCriteria.userId) criteria.userId = searchCriteria.userId;
+            if (searchCriteria.branchId) criteria.branchId = searchCriteria.branchId;
+
 
             const response = await fetch(url, {
-                method: 'GET',
+                method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                    'Authorization': `Bearer ${token}`,
+                    'action': 'GET'
+                },
+                body: JSON.stringify(criteria)
             });
             const data = await response.json();
             if (data.status) {
@@ -272,15 +389,18 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             const url = new URL('http://localhost:8080/NetBanking/user');
-            url.searchParams.append('userId', userId);
-            url.searchParams.append('userType', 'customer');
-            url.searchParams.append('moreDetails', false);
+            const criteria = {}
+            criteria.userId = userId;
+            criteria.userType = 'customer';
+            criteria.moreDetails = false;
             
             const response = await fetch(url, {
-                method: 'GET',
+                method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                    'Authorization': `Bearer ${token}`,
+                    'action': 'GET'
+                },
+                body: JSON.stringify(criteria)
             });
             
             const data = await response.json();
@@ -454,6 +574,57 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    async function saveChanges() {
+        const modal = document.getElementById("accountModal");
+        const accountString = modal.dataset.account; 
+        const originalProfile = JSON.parse(accountString); 
+        const updatedProfile = {};
+    
+        // Compare each field with the original data
+        const accountType = document.getElementById("accountType").innerText;
+        if (accountType !== originalProfile.accountType) updatedProfile.accountType = accountType;
+    
+        const branchId = document.getElementById("branchIdField").innerText;
+        if (branchId !== originalProfile.branchId) updatedProfile.branchId = branchId;
+    
+        const status = document.getElementById("status").innerText;
+        if (status !== originalProfile.status) updatedProfile.status = status;
+    
+        // If no changes, notify and return
+        if (Object.keys(updatedProfile).length === 0) {
+            alert("No changes detected.");
+            return;
+        }
+        const accountNumber = document.getElementById("accountNumberField").innerText;
+        updatedProfile.accountNumber = accountNumber
+        try {
+            // Retrieve the JWT token from local storage
+            const token = localStorage.getItem("jwt");
+    
+            // Send updated profile data to the server
+            const response = await fetch('http://localhost:8080/NetBanking/account', {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(updatedProfile)
+            });
+    
+            const result = await response.json();
+    
+            if (response.ok) {
+                alert("Profile updated successfully!");
+            } else {
+                alert(result.message || "Failed to update profile.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("An error occurred while updating the profile.");
+        }
+    }
+    
+
     // Event listener to show account details when eye icon is clicked
     document.addEventListener("click", async function(event) {
         if (event.target.classList.contains("more")) {
@@ -462,18 +633,25 @@ document.addEventListener('DOMContentLoaded', function () {
             const detailedAccount = { ...account, ...user[0] };
             showAccountDetails(detailedAccount);
         }
+
+        if(event.target.classList.contains("save-button")){
+            saveChanges();
+        }
     });
 
     async function fetchBranchs(branchId) {
         const token = localStorage.getItem('jwt');
-        const url = `http://localhost:8080/NetBanking/branch?branchId=${branchId}`;
-    
+        const url = `http://localhost:8080/NetBanking/branch`;
+        criteria = {}
+        criteria.branchId = branchId;
         try {
             const response = await fetch(url, {
-                method: 'GET',
+                method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                    'Authorization': `Bearer ${token}`,
+                    'action': 'GET'
+                },
+                body:  JSON.stringify(criteria)
             });
     
             const data = await response.json();
