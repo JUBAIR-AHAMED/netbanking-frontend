@@ -13,11 +13,43 @@ function decodeJWT(token) {
     }
 }
 
+function setupNumericInputValidation(inputElement, maxLength) {
+    // Prevent non-numeric input during typing
+    inputElement.addEventListener('keypress', function (event) {
+        const char = String.fromCharCode(event.which || event.keyCode);
+        if (!/^\d$/.test(char)) {
+            event.preventDefault(); // Block non-numeric characters
+        }
+    });
+
+    // Ensure no invalid characters or excess digits after paste or programmatic change
+    inputElement.addEventListener('input', function (event) {
+        let value = event.target.value;
+
+        // Remove non-numeric characters
+        value = value.replace(/\D/g, '');
+
+        // Enforce maximum length
+        if (value.length > maxLength) {
+            value = value.slice(0, maxLength);
+        }
+
+        // Update the input value
+        event.target.value = value;
+    });
+}
+
+setupNumericInputValidation(document.getElementById('accountNumber'), 16);  
+setupNumericInputValidation(document.getElementById('userId'), 6);  
+setupNumericInputValidation(document.getElementById('branchId'), 5);
+
+
+
 function showAccountDetails(account) {
     const modal = document.getElementById("accountModal");
     const modalContent = document.getElementById("modalContent");
-    console.log(account)
     modal.dataset.account = JSON.stringify(account);
+    
     // Format account details
     modalContent.innerHTML = `
         <div class="info-row">
@@ -57,8 +89,8 @@ function showAccountDetails(account) {
                 <span id="branchIdField">${account.branchId}</span>
                 <button class="edit-icon" onclick="toggleEdit('branchIdField')"><img src="icons/pen.png" alt="edit-logo"></button>
             </div>
-            </div>
-            <div class="info-row">
+        </div>
+        <div class="info-row">
             <label for="status">Status:</label>
             <div class="editable-field">
                 <span id="status">${account.status}</span>
@@ -315,6 +347,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const token = localStorage.getItem('jwt');
             const url = new URL('http://localhost:8080/NetBanking/account');
             criteria.count = true;
+            criteria.searchSimilar = true;
 
             const response = await fetch(url, {
                 method: 'POST',
@@ -353,7 +386,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (searchCriteria.accountNumber) criteria.accountNumber = searchCriteria.accountNumber;
             if (searchCriteria.userId) criteria.userId = searchCriteria.userId;
             if (searchCriteria.branchId) criteria.branchId = searchCriteria.branchId;
-
+            criteria.searchSimilar = true;
 
             const response = await fetch(url, {
                 method: 'POST',

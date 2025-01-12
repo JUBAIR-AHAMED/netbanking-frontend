@@ -11,8 +11,7 @@
         <div class="page">
             <div class = "header">
                 <div class="pageName">Bank Of Utopia</div>
-                <div class="bar">
-                </div>
+                <div class="bar"></div>
                 <div class="profileimg" onclick="toggleDropdown()">
                     <img src="/icons/10-profile-picture-ideas-to-make-you-stand-out (1).jpg" alt="profile image">
                     <div id="profileDropdown" class="dropdown-content">
@@ -30,11 +29,11 @@
                         <label for="accountNumber" class="floating-label">Account Number</label>
                     </div>
                     <div class="form-group">
-                        <input type="date" id="fromDate" name="dateOfBirth" required>
+                        <input type="date" id="fromDate" name="dateOfBirth">
                         <label for="fromDate" class="floating-label">From Date</label>
                     </div>
                     <div class="form-group">
-                        <input type="date" id="toDate" name="dateOfBirth" required>
+                        <input type="date" id="toDate" name="dateOfBirth">
                         <label for="toDate" class="floating-label">To Date</label>
                     </div>
                     <button class="submit-btn" type="submit">Get Statement</button>
@@ -54,9 +53,42 @@
                 </div>
             </div>
         </div>
-        </div>
-	</div>
+    </div>
     <script>
+        // Account Number Validation: Only numeric values and exactly 16 digits
+        document.getElementById('accountNumber').addEventListener('input', function(event) {
+            let value = this.value;
+
+            // Allow only numeric input
+            value = value.replace(/[^0-9]/g, '');
+
+            // Ensure the length does not exceed 16 digits
+            if (value.length > 16) {
+                value = value.substring(0, 16);
+            }
+
+            // Update the input field with the corrected value
+            this.value = value;
+        });
+
+        // Validate the form before submission
+        document.getElementById('trans').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Get the account number value
+            let accountNumber = document.getElementById('accountNumber').value;
+
+            // Validate Account Number (must be exactly 16 digits)
+            if (!/^\d{16}$/.test(accountNumber)) {
+                alert('Account number must be exactly 16 digits.');
+                return;
+            }
+
+            // If validation passes, submit the form or proceed with logic
+            console.log('Account Number:', accountNumber);
+            // Proceed with form submission or data fetching here
+        });
+
         const today = new Date().toISOString().split('T')[0];
         document.getElementById("fromDate").setAttribute("max", today);
         document.getElementById("toDate").setAttribute("max", today);

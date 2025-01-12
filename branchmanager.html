@@ -25,7 +25,7 @@
     
                 <div class="pagebody">
                     <div class="bank-logo">
-                        <h2>Search Branchs</h2>
+                        <h2>Search Branches</h2>
                     </div>
                     <form class="search-container" id="searchForm">
                         <div class="form-group">
@@ -59,6 +59,93 @@
             <div id="paginationControls"></div> 
         </div>
     </div>
+
+    <!-- <script>
+        // Branch Id Validation: Numeric only and max 5 digits
+        document.getElementById('branchId').addEventListener('input', function(event) {
+            let value = this.value;
+
+            // Allow only numeric input
+            value = value.replace(/[^0-9]/g, '');
+
+            // Ensure the length does not exceed 5 digits
+            if (value.length > 5) {
+                value = value.substring(0, 5);
+            }
+
+            // Update the input field with the corrected value
+            this.value = value;
+        });
+
+        // Manager Id Validation (same as User Id): Numeric only and max 6 digits
+        document.getElementById('employeeId').addEventListener('input', function(event) {
+            let value = this.value;
+
+            // Allow only numeric input
+            value = value.replace(/[^0-9]/g, '');
+
+            // Ensure the length does not exceed 6 digits
+            if (value.length > 6) {
+                value = value.substring(0, 6);
+            }
+
+            // Update the input field with the corrected value
+            this.value = value;
+        });
+
+        // IFSC Code Validation: First 4 alphabetic, 5th character is '0', last 6 numeric
+        document.getElementById('ifsc').addEventListener('input', function(event) {
+            let value = this.value;
+
+            // Allow only alphabetic for the first 4 characters
+            value = value.replace(/[^A-Za-z0-9]/g, '');
+
+            // Check if the value matches the IFSC pattern (first 4 alphabetic, then '0', then 6 numeric)
+            if (value.length > 11) {
+                value = value.substring(0, 11); // limit to 11 characters
+            }
+
+            if (value.length > 4 && value.charAt(4) !== '0') {
+                value = value.substring(0, 4) + '0' + value.substring(5); // Ensure the 5th character is 0
+            }
+
+            this.value = value;
+        });
+
+        // Form Submission Validation
+        document.getElementById('searchForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            let branchId = document.getElementById('branchId').value;
+            let employeeId = document.getElementById('employeeId').value;
+            let ifsc = document.getElementById('ifsc').value;
+
+            // Validate Branch ID (must be numeric and at most 5 digits)
+            if (!/^\d{1,5}$/.test(branchId)) {
+                alert('Branch Id must be numeric and at most 5 digits.');
+                return;
+            }
+
+            // Validate Manager ID (must be numeric and at most 6 digits)
+            if (!/^\d{1,6}$/.test(employeeId)) {
+                alert('Manager Id must be numeric and at most 6 digits.');
+                return;
+            }
+
+            // Validate IFSC code (pattern: 4 alphabetic, '0', then 6 numeric)
+            if (!/^[A-Za-z]{4}0\d{6}$/.test(ifsc)) {
+                alert('IFSC code must follow the format: 4 alphabetic characters, followed by 0, and 6 numeric characters.');
+                return;
+            }
+
+            // If all validations pass, proceed with form submission or data fetching logic
+            console.log('Branch ID:', branchId);
+            console.log('Manager ID:', employeeId);
+            console.log('IFSC:', ifsc);
+            // Proceed with actual form submission or API call
+        });
+    </script> -->
+
     <script src="JavaScript/branchmanager.js"></script>
     <script src="JavaScript/bar.js"></script>
 </body>

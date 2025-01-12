@@ -147,6 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const token = localStorage.getItem('jwt');
             const url = new URL('http://localhost:8080/NetBanking/branch');
             criteria.count = true;
+            criteria.searchSimilar = true;
             
             const response = await fetch(url, {
                 method: 'POST',
@@ -186,6 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
             criteria.branchId = searchCriteria.branchId;
             criteria.employeeId = searchCriteria.employeeId;
             criteria.ifsc = searchCriteria.ifsc;
+            criteria.searchSimilar = true;
 
             const response = await fetch(url, {
                 method: 'POST',

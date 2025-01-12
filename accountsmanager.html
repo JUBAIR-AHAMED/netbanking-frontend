@@ -29,7 +29,9 @@
                     </div>
                     <form class="search-container" id="searchForm">
                         <div class="form-group">
-                            <input type="text" id="accountNumber" placeholder="">
+                            <!-- <input type="text" id="accountNumber" placeholder="">
+                            <label for="accountNumber" class="floating-label">Account Number</label> -->
+                            <input type="text" id="accountNumber" placeholder="" inputmode="numeric" pattern="^\d{1,16}$" maxlength="16">
                             <label for="accountNumber" class="floating-label">Account Number</label>
                         </div>
                         <div class="form-group">

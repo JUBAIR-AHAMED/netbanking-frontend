@@ -6,7 +6,7 @@ function createBar(role) {
             <div class="dropdown">
                 <a href="#" class="dropbtn" id="moreDropdown">More</a>
                 <div class="dropdown-content">
-                    <a href="usermanager.html">Customers</a>
+                    <a href="customermanager.html">Customers</a>
                     <a href="createaccount.html">Create Account</a>
                     <a href="createcustomer.html">Create Customer</a>
                 </div>

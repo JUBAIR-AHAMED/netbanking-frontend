@@ -94,6 +94,37 @@ document.addEventListener('DOMContentLoaded', function () {
     let branch
     let searchCriteria = {}; 
 
+    const debounce = (func, delay) => {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    };
+
+    const debouncedSearch = debounce(handleRealTimeSearch, 300);
+
+    const nameField = document.getElementById('name');
+    const userIdField = document.getElementById('userId');
+    const emailField = document.getElementById('email');
+
+    nameField.addEventListener('input', debouncedSearch);
+    userIdField.addEventListener('input', debouncedSearch);
+    emailField.addEventListener('input', debouncedSearch);
+
+    async function handleRealTimeSearch() {
+        const name = document.getElementById('name').value.trim();
+        const userId = document.getElementById('userId').value.trim();
+        const email = document.getElementById('email').value.trim();
+
+        // Set search criteria
+        searchCriteria = { name, userId, email };
+
+        // Fetch total count and accounts
+        await fetchTotalCount(searchCriteria);
+        await fetchAccounts();
+    }
+
     // Function to fetch total count based on search criteria
     async function fetchTotalCount(criteria) {
         try {
@@ -105,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function () {
             criteria.email = criteria.email;
             criteria.userType = 'employee';
             criteria.moreDetails = false;
-
+            criteria.searchSimilar = true;
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -145,7 +176,8 @@ document.addEventListener('DOMContentLoaded', function () {
             criteria.email = searchCriteria.email;
             criteria.userType = 'employee';
             criteria.moreDetails = false;
-
+            criteria.searchSimilar = true;
+            
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
