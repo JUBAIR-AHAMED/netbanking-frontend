@@ -538,6 +538,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const aadharNumber = document.getElementById("aadharNumber").innerText;
         if (aadharNumber != originalProfile.aadharNumber) updatedProfile.aadharNumber = aadharNumber;
+
+        const panNumber = document.getElementById("panNumber").innerText;
+        if (panNumber != originalProfile.panNumber) updatedProfile.panNumber = panNumber;
         
         if (Object.keys(updatedProfile).length === 0) {
             alert("No changes detected.");
@@ -550,7 +553,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const token = localStorage.getItem("jwt");
     
             // Send updated profile data to the server
-            const response = await fetch('http://localhost:8080/NetBanking/user', {
+            const response = await fetch('http://localhost:8080/NetBanking/customer', {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',

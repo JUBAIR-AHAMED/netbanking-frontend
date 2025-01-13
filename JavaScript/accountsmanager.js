@@ -663,7 +663,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target.classList.contains("more")) {
             const account = JSON.parse(event.target.getAttribute("data-account"));
             const user = await fetchUserData(account.userId)
-            const detailedAccount = { ...account, ...user[0] };
+            const name = user[0].name
+            const detailedAccount = { ...account, name };
             showAccountDetails(detailedAccount);
         }
 
