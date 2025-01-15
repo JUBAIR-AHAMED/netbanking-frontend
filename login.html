@@ -53,7 +53,7 @@
 
                 const result = await response.json();
 
-                if (result.status) {
+                if (result.status==200) {
                     const token = result.token
                     localStorage.setItem('jwt', token);
                     const payload = JSON.parse(atob(token.split('.')[1]));

@@ -98,7 +98,8 @@
 
 /* Input styling */
 .form-group input,
-.form-group select {
+.form-group select,
+.form-group datalist {
     width: 100%;
     padding: 16px 12px; /* Adjusted padding */
     border: 1px solid #dadce0;
@@ -125,7 +126,9 @@
 .form-group input:focus + .floating-label,
 .form-group input:not(:placeholder-shown) + .floating-label,
 .form-group select:focus + .floating-label,
-.form-group select.selected + .floating-label {
+.form-group select.selected + .floating-label,
+.form-group datalist:focus + .floating-label,
+.form-group datalist.selected + .floating-label {
     top: -10px; /* Move label up */
     left: 12px; /* Adjust left position */
     font-size: 12px; /* Reduce font size */
@@ -155,4 +158,28 @@
 
 .submit-btn:hover {
     background: #1557b0;
+}
+
+.dropdown-menu {
+    display: none; /* Initially hidden */
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+    list-style: none;
+    padding: 0;
+    margin-top: 5px;
+    width: 100%; /* Match the input field width */
+    z-index: 1000;
+}
+
+.dropdown-menu li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+    background-color: #f0f0f0;
 }

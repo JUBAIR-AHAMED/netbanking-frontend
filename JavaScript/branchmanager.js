@@ -135,13 +135,76 @@ function formatDate(timestamp) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    const userIdField = document.getElementById('employeeId');
+    const ifscField = document.getElementById('ifsc');
+    const branchIdField = document.getElementById('branchId');
+
+    // Validate User ID: numbers only, max 6 digits
+    userIdField.addEventListener('input', function () {
+        this.value = this.value.replace(/[^0-9]/g, ''); // Allow only numbers
+        if (this.value.length > 6) {
+            this.value = this.value.slice(0, 6); // Restrict to 6 digits
+        }
+    });
+
+    ifscField.addEventListener('input', function () {
+        const value = ifscField.value.toUpperCase(); // Convert to uppercase
+        ifscField.value = value.replace(/[^A-Z0-9]/g, ''); // Allow only A-Z and 0-9
+    
+        // Ensure IFSC pattern: 4 letters, 1 zero, 6 digits
+        if (value.length > 11 || !/^([A-Z]{0,4}0?\d{0,6})?$/.test(value)) {
+            ifscField.value = value.slice(0, -1); // Remove last invalid character
+        }
+    });
+    
+
+    // Validate Branch ID: numbers only, max 5 digits
+    branchIdField.addEventListener('input', function () {
+        this.value = this.value.replace(/[^0-9]/g, ''); // Allow only numbers
+        if (this.value.length > 5) {
+            this.value = this.value.slice(0, 5); // Restrict to 5 digits
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
     let currentPage = 1; // Current page
     const limit = 8; // Items per page
     let totalPages = 1; // Total pages will be calculated later
     let branch
     let searchCriteria = {}; 
 
-    // Function to fetch total count based on search criteria
+    const debounce = (func, delay) => {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    };
+
+    const debouncedSearch = debounce(handleRealTimeSearch, 300);
+
+    const employeeIdField = document.getElementById('employeeId');
+    const ifscField = document.getElementById('ifsc');
+    const branchIdField = document.getElementById('branchId');
+
+    employeeIdField.addEventListener('input', debouncedSearch);
+    ifscField.addEventListener('input', debouncedSearch);
+    branchIdField.addEventListener('input', debouncedSearch);
+
+    async function handleRealTimeSearch() {
+        const employeeId = document.getElementById('employeeId').value.trim();
+        const ifsc = document.getElementById('ifsc').value.trim();
+        const branchId = document.getElementById('branchId').value.trim();
+
+        // Set search criteria
+        searchCriteria = {branchId, employeeId, ifsc};
+
+        // Fetch total count and accounts
+        await fetchTotalCount(searchCriteria);
+        await fetchAccounts();
+    }
+
     async function fetchTotalCount(criteria) {
         try {
             const token = localStorage.getItem('jwt');

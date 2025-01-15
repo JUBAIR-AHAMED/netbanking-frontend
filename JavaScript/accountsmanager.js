@@ -112,11 +112,44 @@ function toggleEdit(fieldId) {
         const currentText = field.innerText;
 
         // Create an input field
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.value = currentText;
-        input.classList.add('editable-input');
-        input.id = fieldId;
+        let input;
+        if(fieldId === 'accountType') {
+            input = document.createElement('select');
+            input.id = fieldId;
+            input.classList.add('editable-input');
+            const options = ['SAVINGS','CURRENT'];
+            options.forEach(option => {
+                 const optionElement = document.createElement('option');
+                 optionElement.value = option;
+                 optionElement.text = option;
+                 if (option === currentText) {
+                     optionElement.selected = true;
+                 }
+                  input.appendChild(optionElement)
+            })
+        }
+        else if(fieldId === 'status') {
+            input = document.createElement('select');
+            input.id = fieldId;
+            input.classList.add('editable-input');
+            const options = ['ACTIVE','BLOCKED','INACTIVE'];
+            options.forEach(option => {
+                 const optionElement = document.createElement('option');
+                 optionElement.value = option;
+                 optionElement.text = option;
+                 if (option === currentText) {
+                     optionElement.selected = true;
+                 }
+                  input.appendChild(optionElement)
+            })
+        }
+         else {
+             input = document.createElement('input');
+             input.type = 'text';
+             input.value = currentText;
+             input.classList.add('editable-input');
+             input.id = fieldId;
+        }
 
         // Replace span with input field
         field.replaceWith(input);

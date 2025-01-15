@@ -245,6 +245,24 @@ function formatDate(timestamp) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    const userIdField = document.getElementById('userId');
+    const nameField = document.getElementById('name');
+
+    // Validate User ID: numbers only, max 6 digits
+    userIdField.addEventListener('input', function () {
+        this.value = this.value.replace(/[^0-9]/g, ''); // Allow only numbers
+        if (this.value.length > 6) {
+            this.value = this.value.slice(0, 6); // Restrict to 6 digits
+        }
+    });
+
+    // Validate Name: alphabets, ., space
+    nameField.addEventListener('input', function () {
+        this.value = this.value.replace(/[^a-zA-Z. ]/g, ''); // Allow only letters, ., and spaces
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
     let currentPage = 1; // Current page
     const limit = 8; // Items per page
     let totalPages = 1; // Total pages will be calculated later

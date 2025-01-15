@@ -56,7 +56,8 @@ function createAccountCard(account) {
         name,
         userId,
         mobile,
-        role
+        role,
+        branchId
     } = account;
 
     return `
@@ -88,6 +89,34 @@ function formatDate(timestamp) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    const userIdField = document.getElementById('userId');
+    const nameField = document.getElementById('name');
+    const branchIdField = document.getElementById('branchId');
+
+    // Validate User ID: numbers only, max 6 digits
+    userIdField.addEventListener('input', function () {
+        this.value = this.value.replace(/[^0-9]/g, ''); // Allow only numbers
+        if (this.value.length > 6) {
+            this.value = this.value.slice(0, 6); // Restrict to 6 digits
+        }
+    });
+
+    // Validate Name: alphabets, ., space
+    nameField.addEventListener('input', function () {
+        this.value = this.value.replace(/[^a-zA-Z. ]/g, ''); // Allow only letters, ., and spaces
+    });
+
+    // Validate Branch ID: numbers only, max 5 digits
+    branchIdField.addEventListener('input', function () {
+        this.value = this.value.replace(/[^0-9]/g, ''); // Allow only numbers
+        if (this.value.length > 5) {
+            this.value = this.value.slice(0, 5); // Restrict to 5 digits
+        }
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
     let currentPage = 1; // Current page
     const limit = 8; // Items per page
     let totalPages = 1; // Total pages will be calculated later
@@ -107,18 +136,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const nameField = document.getElementById('name');
     const userIdField = document.getElementById('userId');
     const emailField = document.getElementById('email');
+    const branchIdField = document.getElementById('branchId');
 
     nameField.addEventListener('input', debouncedSearch);
     userIdField.addEventListener('input', debouncedSearch);
     emailField.addEventListener('input', debouncedSearch);
+    branchIdField.addEventListener('input', debouncedSearch);
 
     async function handleRealTimeSearch() {
         const name = document.getElementById('name').value.trim();
         const userId = document.getElementById('userId').value.trim();
         const email = document.getElementById('email').value.trim();
+        const branchId = document.getElementById('branchId').value.trim();
 
         // Set search criteria
-        searchCriteria = { name, userId, email };
+        searchCriteria = { name, userId, email, branchId};
 
         // Fetch total count and accounts
         await fetchTotalCount(searchCriteria);
@@ -134,8 +166,9 @@ document.addEventListener('DOMContentLoaded', function () {
             criteria.userId = criteria.userId;
             criteria.name = criteria.name;
             criteria.email = criteria.email;
+            criteria.branchId = criteria.branchId;
             criteria.userType = 'employee';
-            criteria.moreDetails = false;
+            criteria.moreDetails = true;
             criteria.searchSimilar = true;
             const response = await fetch(url, {
                 method: 'POST',
@@ -174,8 +207,9 @@ document.addEventListener('DOMContentLoaded', function () {
             criteria.userId = searchCriteria.userId;
             criteria.name = searchCriteria.name;
             criteria.email = searchCriteria.email;
+            criteria.branchId = searchCriteria.branchId;
             criteria.userType = 'employee';
-            criteria.moreDetails = false;
+            criteria.moreDetails = true;
             criteria.searchSimilar = true;
             
             const response = await fetch(url, {
@@ -261,9 +295,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const email = document.getElementById('email').value.trim();
         const name = document.getElementById('name').value.trim();
         const userId = document.getElementById('userId').value.trim();
+        const branchId = document.getElementById('branchId').value.trim();
     
         // Validation: At least one input must be provided
-        if (!email && !name && !userId) {
+        if (!email && !name && !userId && !branchId) {
             alert("Please enter at least one search criterion.");
             return;
         }
@@ -273,6 +308,7 @@ document.addEventListener('DOMContentLoaded', function () {
             searchCriteria.email = email;
             searchCriteria.name = name;
             searchCriteria.userId = userId;
+            searchCriteria.branchId = branchId;
     
             // Reset to the first page
             currentPage = 1;

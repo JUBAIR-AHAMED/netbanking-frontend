@@ -49,10 +49,27 @@
                                 <label for="ifscCode" class="floating-label">IFSC Code</label>
                             </div>
                         </div>
+                        <!-- <div class="form-group">
+                            <select id="fromAccountNumberDropdown" class="selected" style="background-color: white;" >
+                            </select>
+                            <label for="fromAccountNumberDropdown" class="floating-label">Sender Account</label>
+                        </div> -->
+                        <!-- <div class="form-group">
+                            <input type="text" id="fromAccountNumber" class="form-control hidden" placeholder="Enter Account Number">
+                            <select id="fromAccountNumberDropdown" class="form-control selected"></select>
+                            <label id="fromAccountNumberLabel" class="floating-label">Sender Account Number</label>
+                        </div> -->
                         <div class="form-group">
-                            <input type="text" id="fromAccountNumber" required placeholder="" maxlength="16">
-                            <label for="fromAccountNumber" class="floating-label">Sender Account</label>
+                            <input 
+                            type="text" 
+                            id="fromAccountNumber" 
+                            class="form-control" 
+                            placeholder="" 
+                            autocomplete="off">
+                            <label for="fromAccountNumber" class="floating-label">Sender Account Number</label>
+                            <ul id="fromAccountDropdown" class="dropdown-menu"></ul>
                         </div>
+                        
                         <div class="form-group">
                             <input type="text" id="toAccountNumber" placeholder="" maxlength="16">
                             <label for="toAccountNumber" class="floating-label">Receiver Account</label>
