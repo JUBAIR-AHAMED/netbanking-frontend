@@ -47,90 +47,6 @@ function formatIndianCurrency(amount) {
     return formattedAmount;
 }
 
-// document.addEventListener('DOMContentLoaded', function(){
-//     const urlParams = new URLSearchParams(window.location.search);
-        
-//     // Check if 'accountNumber' exists in the query parameters
-//     const accountNumber = urlParams.get('accountNumber');
-    
-//     // If an account number is found in the URL, fill the input field
-//     if (accountNumber) {
-//         document.getElementById('accountNumber').value = accountNumber;
-//     }
-    
-//     try {
-//         const token = localStorage.getItem('jwt');
-//         if(!token) {
-//             // alert('You must be logged in to view this page.');
-//             window.location.href('/login.html');
-//             return;
-//         }
-//     } catch (error) {
-//         console.log(error);
-//     }
-
-//     document.getElementById('trans').addEventListener('submit', async function(event){
-//         event.preventDefault();
-        
-//         const accountNumber = document.getElementById("accountNumber").value;
-//         const fromDate = new Date(document.getElementById("fromDate").value).getTime();
-//         const toDate = new Date(document.getElementById("toDate").value).getTime()+86400000;
-//         try{
-//             const token = localStorage.getItem('jwt')
-//             console.log(token)
-//             const response = await fetch('http://localhost:8080/NetBanking/statement', {
-//                 method: 'POST',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                     'Authorization': `Bearer ${token}`
-//                 },
-//                 body: JSON.stringify({accountNumber, fromDate, toDate})
-//             });
-
-//             const data = await response.json();
-
-//             if (data.status) {
-//                 if(Array.isArray(data.statement))
-//                 {
-//                     displayStatement(data.statement);
-//                 } else {
-//                     displayStatement(null);
-//                 }
-//             } else {
-//                 alert(data.message);
-//             }
-//         } catch (error) {
-//             console.error('Error fetching statement:', error);
-//             alert('Failed to load statement. Please try again.');
-//         }
-//     })
-
-//     function displayStatement(statement) {
-//         const statementContainer = document.querySelector('#statementInsert');
-        
-//         document.getElementById('statementid').classList.remove('hidden')
-//         if (statement == null || statement.length === 0) {
-//             statementContainer.innerHTML = "<p style=\"padding: 10px; font-size: 20px; color: darkred;\">No statement found.</p>";
-//             return;
-//         }
-    
-//         statementContainer.innerHTML = '';
-    
-//         statement.forEach(statement => {
-//             let statementHTML = createStatement(
-//                 statement.referenceNumber,
-//                 statement.transactionAccount,
-//                 statement.transactionAmount,
-//                 statement.balance,
-//                 statement.type,
-//                 statement.timestamp
-//             );
-    
-//             statementContainer.insertAdjacentHTML('beforeend', statementHTML);
-//         });
-//     }
-// })
-
 document.addEventListener('DOMContentLoaded', function () {
     let currentPage = 1; // Track the current page
     const limit = 6; // Number of transactions per page
@@ -150,6 +66,94 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     } catch (error) {
         console.log(error);
+    }
+
+    const jwtToken = localStorage.getItem('jwt');
+    const fromAccountInput = document.getElementById('accountNumber');
+    const fromAccountDropdown = document.getElementById('accountDropdown');
+    if (role === 'EMPLOYEE' || role === 'MANAGER') {
+        // Enable the input field for manual entry
+        fromAccountInput.disabled = false;
+
+        // Add event listener to fetch accounts dynamically as the user types
+        fromAccountInput.addEventListener('input', async function () {
+            const inputValue = fromAccountInput.value.trim();
+            if (inputValue.length >= 3) { // Fetch matching accounts after 3+ characters
+                try {
+                    const criteria = { limit: 3, accountNumber: inputValue, searchSimilarFields: ["accountNumber"] };
+                    const url = new URL('http://localhost:8080/NetBanking/account');
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${jwtToken}`,
+                            'action': 'GET'
+                        },
+                        body: JSON.stringify(criteria)
+                    });
+
+                    const data = await response.json();
+                    if (data.status && Array.isArray(data.accounts)) {
+                        displayAccountsDropdown(data.accounts, fromAccountDropdown);
+                    } else {
+                        fromAccountDropdown.innerHTML = '<li>No matching accounts found</li>';
+                        fromAccountDropdown.style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error('Error fetching accounts:', error);
+                }
+            }
+        });
+
+        // Handle selecting an account from the dropdown
+        fromAccountDropdown.addEventListener('click', function (event) {
+            if (event.target.tagName === 'LI') {
+                fromAccountInput.value = event.target.dataset.value;
+                fromAccountDropdown.style.display = 'none'; // Hide the dropdown after selection
+            }
+        });
+    } else if (role === 'CUSTOMER') {
+        fromAccountInput.readOnly = true; // Disable manual typing for customers
+    
+        // Fetch and populate dropdown for customers on focus
+        fromAccountInput.addEventListener('focus', async function () {
+            try {
+                const response = await fetch('http://localhost:8080/NetBanking/account', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${jwtToken}`,
+                        'action': 'GET'
+                    }
+                });
+                const data = await response.json();
+    
+                if (data.status && Array.isArray(data.accounts)) {
+                    displayAccountsDropdown(data.accounts, fromAccountDropdown);
+                } else {
+                    console.error('No accounts found or error in response');
+                    fromAccountDropdown.innerHTML = '<li>No accounts available</li>';
+                    fromAccountDropdown.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error fetching accounts:', error);
+            }
+        });
+    
+        // Handle selecting an account from the dropdown
+        fromAccountDropdown.addEventListener('click', function (event) {
+            if (event.target.tagName === 'LI') {
+                fromAccountInput.value = event.target.dataset.value;
+                fromAccountDropdown.style.display = 'none'; // Hide the dropdown after selection
+            }
+        });
+    
+        // Hide the dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+            if (!fromAccountDropdown.contains(event.target) && event.target !== fromAccountInput) {
+                fromAccountDropdown.style.display = 'none';
+            }
+        });
+    } else {
+        fromAccountInput.disabled = true;
     }
 
     document.getElementById('trans').addEventListener('submit', async function (event) {
@@ -283,6 +287,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 fetchStatement();
             }
         });
+
+    }
+
+    function displayAccountsDropdown(accounts, dropdownElement) {
+        dropdownElement.innerHTML = ''; // Clear existing options
+        accounts.forEach(account => {
+            const listItem = document.createElement('li');
+            listItem.dataset.value = account.accountNumber;
+            listItem.textContent = `${account.accountNumber} - ${account.status}`;
+            dropdownElement.appendChild(listItem);
+        });
+        dropdownElement.style.display = 'block'; // Show the dropdown
     }
 });
 

@@ -24,9 +24,19 @@
                     <div class="heading">
                         <h2>Get Statement</h2>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <input id="accountNumber" type="text" required placeholder>
                         <label for="accountNumber" class="floating-label">Account Number</label>
+                    </div> -->
+                    <div class="form-group">
+                        <input 
+                        type="text" 
+                        id="accountNumber" 
+                        class="form-control" 
+                        placeholder="" 
+                        autocomplete="off" required>
+                        <label for="accountNumber" class="floating-label">Sender Account Number *</label>
+                        <ul id="accountDropdown" class="dropdown-menu"></ul>
                     </div>
                     <div class="form-group">
                         <input type="date" id="fromDate" name="dateOfBirth">

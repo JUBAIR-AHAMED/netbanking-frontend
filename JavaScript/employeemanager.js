@@ -13,41 +13,151 @@ function decodeJWT(token) {
     }
 }
 
-function showAccountDetails(account) {
+function showEmployeeDetails(user) {
     const modal = document.getElementById("accountModal");
     const modalContent = document.getElementById("modalContent");
-
+    modal.dataset.customer = JSON.stringify(user);
     // Format account details
     modalContent.innerHTML = `
-        <p><strong>Account Number:</strong> ${account.accountNumber}</p>
-        <p><strong>Account Type:</strong> ${account.accountType}</p>
-        <p><strong>Balance:</strong> ${formatIndianCurrency(account.balance)}</p>
-        <p><strong>Date of Opening:</strong> ${formatDate(account.dateOfOpening)}</p>
-        <p><strong>Account Holder:</strong> ${account.name}</p>
-        <p><strong>Branch ID:</strong> ${account.branchId}</p>
-        <p><strong>Status:</strong> ${account.status}</p>
+    <div class="info-row">
+            <label for="userIdField">User ID</label>
+            <div class="non-editable-field">
+                <span id="userIdField">${user.userId}</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <label for="username">User Name</label>
+            <div class="editable-field">
+                <span id="username">${user.name}</span>
+                <button class="edit-icon" onclick="toggleEdit('username')"><img src="icons/pen.png" alt="edit-logo"></button>
+            </div>
+        </div>
+        <div class="info-row">
+            <label for="mail">Email</label>
+            <div class="editable-field">
+                <span id="mail">${user.email}</span>
+                <button class="edit-icon" onclick="toggleEdit('mail')"><img src="icons/pen.png" alt="edit-logo"></button>
+            </div>
+        </div>
+        <div class="info-row">
+            <label for="status">Status:</label>
+            <div class="editable-field">
+                <span id="status">${user.status}</span>
+                <button class="edit-icon" onclick="toggleEdit('status')"><img src="icons/pen.png" alt="edit-logo"></button>
+            </div>
+        </div>
+        <div class="info-row">
+            <label for="dateOfBirth">Date Of Birth</label>
+            <div class="editable-field">
+                <span id="dateOfBirth">${user.dateOfBirth}</span>
+                <button class="edit-icon" onclick="toggleEdit('dateOfBirth')"><img src="icons/pen.png" alt="edit-logo"></button>
+            </div>
+        </div>
+        <div class="info-row">
+            <label for="branchIdField">Branch Id</label>
+            <div class="editable-field">
+                <span id="branchIdField">${(user.branchId==null? "Not set": user.branchId)}</span>
+                <button class="edit-icon" onclick="toggleEdit('branchIdField')"><img src="icons/pen.png" alt="edit-logo"></button>
+            </div>
+        </div>
+         <div class="info-row">
+            <label for="roleField">Role</label>
+            <div class="editable-field">
+                <span id="roleField">${user.role}</span>
+                <button class="edit-icon" onclick="toggleEdit('roleField')"><img src="icons/pen.png" alt="edit-logo"></button>
+            </div>
+        </div>
+        <button class="save-button">Save Changes</button>    
     `;
 
     // Show the modal
     modal.style.display = "block";
 }
 
-function showBranchDetails(branch) {
-    console.log(branch)
-    const modal = document.getElementById("branchModal");
-    const modalContent = document.getElementById("branchModalContent");
+function saveEdit(fieldId, newValue) {
+    // Create a span to replace input
+    const span = document.createElement('span');
+    span.id = fieldId;
+    span.innerText = newValue;
+    const input = document.getElementById(fieldId);
+    if (input) {
+        input.replaceWith(span);
+    }
+}
 
-    // Format branch details
-    modalContent.innerHTML = `
-        <p><strong>Branch ID:</strong> ${branch[0].branchId}</p>
-        <p><strong>Branch Name:</strong> ${branch[0].name}</p>
-        <p><strong>Address:</strong> ${branch[0].address}</p>
-        <p><strong>IFSC:</strong> ${branch[0].ifsc}</p>
-        <p><strong>Manager ID:</strong> ${branch[0].employeeId}</p>
-    `;
+function toggleEdit(fieldId) {
+    const field = document.getElementById(fieldId);
 
-    // Show the modal
-    modal.style.display = "block";
+    // Check if field is a span and toggle to input
+    if (field && field.tagName === 'SPAN') {
+        const currentText = field.innerText;
+        let input;
+        if(fieldId === 'status') {
+            input = document.createElement('select');
+            input.id = fieldId;
+            input.classList.add('editable-input');
+            const options = ['ACTIVE','BLOCKED','INACTIVE'];
+            options.forEach(option => {
+                 const optionElement = document.createElement('option');
+                 optionElement.value = option;
+                 optionElement.text = option;
+                 if (option == currentText) {
+                     optionElement.selected = true;
+                 }
+                  input.appendChild(optionElement)
+            })
+        } else if(fieldId === 'roleField') {
+            input = document.createElement('select');
+            input.id = fieldId;
+            input.classList.add('editable-input');
+            const options = ['MANAGER','EMPLOYEE'];
+            options.forEach(option => {
+                 const optionElement = document.createElement('option');
+                 optionElement.value = option;
+                 optionElement.text = option;
+                 if (option === currentText) {
+                     optionElement.selected = true;
+                 }
+                  input.appendChild(optionElement)
+            })
+        }
+        else if (fieldId === 'dateOfBirth') {
+            input = document.createElement('input');
+            input.type = 'date';
+            input.value = new Date(Date.parse(currentText.split(".").reverse().join("-"))).toISOString().split('T')[0];; // Set value to current date
+
+            input.classList.add('editable-input');
+            input.id = fieldId;
+        }
+         else {
+             input = document.createElement('input');
+             input.type = 'text';
+             input.value = currentText;
+             input.classList.add('editable-input');
+             input.id = fieldId;
+        }
+
+        // Replace span with input field
+        field.replaceWith(input);
+
+        // Focus the input for immediate editing
+        input.focus();
+
+        // Save on blur or enter key
+        input.addEventListener('blur', () => {
+            if(document.getElementById(fieldId)) {
+                  saveEdit(fieldId, input.value);
+            }
+        });
+       input.addEventListener('keypress', (e) => {
+           if (e.key === 'Enter') {
+                if(document.getElementById(fieldId)) {
+                   saveEdit(fieldId, input.value);
+               }
+           }
+       });
+
+    }
 }
 
 function createAccountCard(account) {
@@ -287,6 +397,65 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+
+    async function saveChanges() {
+        const modal = document.getElementById("accountModal");
+        const customerString = modal.dataset.customer; 
+        const originalProfile = JSON.parse(customerString); 
+        const updatedProfile = {};
+    
+        // Compare each field with the original data
+        const username = document.getElementById("username").innerText;
+        if (username !== originalProfile.name) updatedProfile.name = username;
+    
+        const mail = document.getElementById("mail").innerText;
+        if (mail !== originalProfile.email) updatedProfile.email = mail;
+    
+        const status = document.getElementById("status").innerText;
+        if (status !== originalProfile.status) updatedProfile.status = status;
+
+        const dob = document.getElementById("dateOfBirth").innerText;
+        if (dob !== originalProfile.dateOfBirth) updatedProfile.dateOfBirth = dob;
+
+        const branchId = document.getElementById("branchIdField").innerText;
+        if (branchId != originalProfile.branchId) updatedProfile.branchId = branchId;
+
+        const role = document.getElementById("roleField").innerText;
+        if (role != originalProfile.branchId) updatedProfile.role = role;
+        
+        if (Object.keys(updatedProfile).length === 0) {
+            alert("No changes detected.");
+            return;
+        }
+        const userId = document.getElementById("userIdField").innerText;
+        updatedProfile.key = userId
+        try {
+            // Retrieve the JWT token from local storage
+            const token = localStorage.getItem("jwt");
+    
+            // Send updated profile data to the server
+            const response = await fetch('http://localhost:8080/NetBanking/employee', {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(updatedProfile)
+            });
+    
+            const result = await response.json();
+    
+            if (response.ok) {
+                alert("Profile updated successfully!");
+            } else {
+                alert(result.message || "Failed to update profile.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("An error occurred while updating the profile.");
+        }
+    }
+
     // Event listener for the search form
     document.getElementById('searchForm').addEventListener('submit', async function (event) {
         event.preventDefault(); // Prevent default form submission
@@ -360,7 +529,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <div id="accountModal" class="modal">
                 <div class="modal-content">
                     <span class="close-button" id="closeModal">&times;</span>
-                    <h2>Account Details</h2>
+                    <h2>Employee Details</h2>
                     <div id="modalContent"></div>
                 </div>
             </div>
@@ -402,7 +571,11 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener("click", function(event) {
         if (event.target.classList.contains("more")) {
             const account = JSON.parse(event.target.getAttribute("data-account"));
-            showAccountDetails(account);
+            showEmployeeDetails(account);
+        }
+
+        if(event.target.classList.contains("save-button")){
+            saveChanges();
         }
     });
 

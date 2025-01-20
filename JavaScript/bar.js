@@ -1,3 +1,36 @@
+function isValidJWT(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = JSON.parse(atob(base64));
+
+        // Check expiration time (if `exp` is in seconds, multiply by 1000 for milliseconds)
+        const currentTime = Date.now();
+        if (jsonPayload.exp && currentTime >= jsonPayload.exp * 1000) {
+            console.warn('Token has expired.');
+            return false;
+        }
+
+        return true;
+    } catch (e) {
+        console.error('Invalid token.', e);
+        return false;
+    }
+}
+
+// Validate JWT token before rendering the navigation bar
+function validateAndRedirect() {
+    const token = localStorage.getItem('jwt');
+    if (!token || !isValidJWT(token)) {
+        localStorage.removeItem('jwt'); // Remove invalid or missing token
+        window.location.href = '/login.html'; // Redirect to login page
+    }
+}
+
+// Call this function before doing anything else
+validateAndRedirect();
+
+
 function createBar(role) {
     let moreDropdown = '';
     

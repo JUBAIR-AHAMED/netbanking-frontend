@@ -100,43 +100,6 @@ function showCustomerDetails(user) {
     modal.style.display = "block";
 }
 
-// function toggleEdit(fieldId) {
-//     const field = document.getElementById(fieldId);
-
-//     // Check if field is a span and toggle to input
-//     if (field && field.tagName === 'SPAN') {
-//         const currentText = field.innerText;
-
-//         // Create an input field
-//         const input = document.createElement('input');
-//         input.type = 'text';
-//         input.value = currentText;
-//         input.classList.add('editable-input');
-//         input.id = fieldId;
-
-//         // Replace span with input field
-//         field.replaceWith(input);
-
-//         // Focus the input for immediate editing
-//         input.focus();
-
-//         // Save on blur or enter key
-//         input.addEventListener('blur', () => {
-//             if(document.getElementById(fieldId)) {
-//                   saveEdit(fieldId, input.value);
-//             }
-//         });
-//        input.addEventListener('keypress', (e) => {
-//            if (e.key === 'Enter') {
-//                 if(document.getElementById(fieldId)) {
-//                    saveEdit(fieldId, input.value);
-//                }
-//            }
-//        });
-
-//     }
-// }
-
 function toggleEdit(fieldId) {
     const field = document.getElementById(fieldId);
 

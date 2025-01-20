@@ -136,7 +136,7 @@ async function fetchAccounts() {
         });
         const data = await response.json();
 
-        if (data.status) {
+        if (data.status==200) {
             if(Array.isArray(data.accounts))
             {
                 accounts = data.accounts
@@ -189,7 +189,7 @@ async function fetchStatement(accountNumber) {
 
         const data = await response.json();
 
-        if (data.status) {
+        if (data.status==200) {
             if (Array.isArray(data.statement)) {
                 displayStatement(data.statement);
             } else {
@@ -238,7 +238,7 @@ function displayStatement(statement) {
     }
 
     if (statement===null||statement.length === 0) {
-        statementContainer.style="display: flex; justify-content: center;"
+        // statementContainer.style="display: flex; justify-content: center;"
         statementContainer.innerHTML = "<p style=\"padding: 10px; font-size: 20px; color: darkred;\">No statement found.</p>";
         return;
     }

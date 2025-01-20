@@ -1,3 +1,4 @@
+let tokenBranchId = null;
 // // Function to decode JWT token and extract role and branchId
 function decodeJWT(token) {
     try {
@@ -49,7 +50,10 @@ function showAccountDetails(account) {
     const modal = document.getElementById("accountModal");
     const modalContent = document.getElementById("modalContent");
     modal.dataset.account = JSON.stringify(account);
-    
+
+    // Check if branchId is editable
+    const isBranchEditable = account.branchId === tokenBranchId;
+
     // Format account details
     modalContent.innerHTML = `
         <div class="info-row">
@@ -61,7 +65,7 @@ function showAccountDetails(account) {
         <div class="info-row">
             <label for="balance">Balance</label>
             <div class="non-editable-field">
-                <span id="accountNumberField">${formatIndianCurrency(account.balance)}</span>
+                <span id="balance">${formatIndianCurrency(account.balance)}</span>
             </div>
         </div>
         <div class="info-row">
@@ -78,23 +82,22 @@ function showAccountDetails(account) {
         </div>
         <div class="info-row">
             <label for="accountType">Account Type</label>
-            <div class="editable-field">
+            <div class="non-editable-field">
                 <span id="accountType">${account.accountType}</span>
-                <button class="edit-icon" onclick="toggleEdit('accountType')"><img src="icons/pen.png" alt="edit-logo"></button>
             </div>
         </div>
         <div class="info-row">
             <label for="branchId">Branch ID:</label>
-            <div class="editable-field">
+            <div class="${isBranchEditable ? 'editable-field' : 'non-editable-field'}">
                 <span id="branchIdField">${account.branchId}</span>
-                <button class="edit-icon" onclick="toggleEdit('branchIdField')"><img src="icons/pen.png" alt="edit-logo"></button>
+                ${isBranchEditable ? `<button class="edit-icon" onclick="toggleEdit('branchIdField')"><img src="icons/pen.png" alt="edit-logo"></button>` : ''}
             </div>
         </div>
         <div class="info-row">
             <label for="status">Status:</label>
-            <div class="editable-field">
+            <div class="${isBranchEditable ? 'editable-field' : 'non-editable-field'}">
                 <span id="status">${account.status}</span>
-                <button class="edit-icon" onclick="toggleEdit('status')"><img src="icons/pen.png" alt="edit-logo"></button>
+                ${isBranchEditable ? `<button class="edit-icon" onclick="toggleEdit('status')"><img src="icons/pen.png" alt="edit-logo"></button>` : ''}
             </div>
         </div>
         <button class="save-button">Save Changes</button>
@@ -103,6 +106,7 @@ function showAccountDetails(account) {
     // Show the modal
     modal.style.display = "block";
 }
+
 
 function toggleEdit(fieldId) {
     const field = document.getElementById(fieldId);
@@ -381,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const url = new URL('http://localhost:8080/NetBanking/account');
             criteria.count = true;
             criteria.searchSimilar = true;
-
+            criteria.searchSimilarFields = ["userId", "accountNumber", "branchId"];
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -391,7 +395,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify(criteria)
             });
             const data = await response.json();
-            if (data.status) {
+            if (data.status==200) {
                 const totalCount = data.count || 0; // Total accounts count
                 totalPages = Math.ceil(totalCount / limit); // Calculate total pages
             } else {
@@ -404,7 +408,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Function to fetch accounts for the current page
-    async function fetchAccounts() {
+    async function fetchAccounts(searchSimilarFields) {
         try {
             const token = localStorage.getItem('jwt');
             if (!token) {
@@ -420,6 +424,10 @@ document.addEventListener('DOMContentLoaded', function () {
             if (searchCriteria.userId) criteria.userId = searchCriteria.userId;
             if (searchCriteria.branchId) criteria.branchId = searchCriteria.branchId;
             criteria.searchSimilar = true;
+            console.log(criteria.searchSimilarFields==null)
+            if(searchSimilarFields==null){
+                criteria.searchSimilarFields = ["userId", "accountNumber", "branchId"];
+            }
 
             const response = await fetch(url, {
                 method: 'POST',
@@ -430,7 +438,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify(criteria)
             });
             const data = await response.json();
-            if (data.status) {
+            if (data.status==200) {
                 if (Array.isArray(data.accounts)) {
                     displayAccounts(data.accounts);
                 } else {
@@ -470,7 +478,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             
             const data = await response.json();
-            if (data.status) {
+            if (data.status==200) {
                 return data.users
             } else {
                 alert(data.message);
@@ -575,19 +583,20 @@ document.addEventListener('DOMContentLoaded', function () {
             }
     
             const decodedToken = decodeJWT(token); // Decode the JWT token
-            const branchId = decodedToken?.branchId; // Extract the branchId
-    
-            if (!branchId) {
+            tokenBranchId = decodedToken?.branchId; // Extract the branchId
+            console.log(tokenBranchId)
+            if (!tokenBranchId) {
                 alert("Branch ID not found in token.");
                 return;
             }
     
             // Set the initial search criteria to the branchId
-            searchCriteria = { branchId };
+            searchSimilarFields = []
+            searchCriteria = { branchId:tokenBranchId };
     
             // Fetch total count and accounts based on the branchId
             await fetchTotalCount(searchCriteria);
-            await fetchAccounts();
+            await fetchAccounts(searchSimilarFields);
         } catch (error) {
             console.error('Error during initialization:', error);
             alert("Failed to initialize accounts. Please check the console for details.");
@@ -647,11 +656,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const updatedProfile = {};
     
         // Compare each field with the original data
-        const accountType = document.getElementById("accountType").innerText;
-        if (accountType !== originalProfile.accountType) updatedProfile.accountType = accountType;
-    
-        const branchId = document.getElementById("branchIdField").innerText;
-        if (branchId !== originalProfile.branchId) updatedProfile.branchId = branchId;
+        const branchIdField = document.getElementById("branchIdField").innerText;
+        if (branchIdField !== originalProfile.branchId) updatedProfile.branchId = branchIdField;
     
         const status = document.getElementById("status").innerText;
         if (status !== originalProfile.status) updatedProfile.status = status;
@@ -679,7 +685,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
             const result = await response.json();
     
-            if (response.ok) {
+            if (result.status==200) {
                 alert("Profile updated successfully!");
             } else {
                 alert(result.message || "Failed to update profile.");
@@ -722,7 +728,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     
             const data = await response.json();
-            if (data.status) {
+            if (data.status==200) {
                 return data.branch; // Return the branch details
             } else {
                 alert(data.message);
