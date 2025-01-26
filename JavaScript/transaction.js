@@ -112,11 +112,11 @@ document.addEventListener('DOMContentLoaded', async function () {
                     } else {
                         console.error('No accounts found or error in response');
                         fromAccountDropdown.innerHTML = ''; // Clear existing options
-        const noAccountsItem = document.createElement('li');
-        noAccountsItem.textContent = 'No accounts available';
-        noAccountsItem.style.color = 'gray'; // Optional styling
-        fromAccountDropdown.appendChild(noAccountsItem);
-        fromAccountDropdown.style.display = 'block';
+                        const noAccountsItem = document.createElement('li');
+                        noAccountsItem.textContent = 'No accounts available';
+                        noAccountsItem.style.color = 'gray'; // Optional styling
+                        fromAccountDropdown.appendChild(noAccountsItem);
+                        fromAccountDropdown.style.display = 'block';
                     }
                 }
             } catch (error) {

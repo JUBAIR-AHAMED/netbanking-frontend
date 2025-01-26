@@ -148,7 +148,7 @@ a.active::after {
     border-radius: 8px;
     margin: 5px;
     background-color: black;
-    width: 1874px;
+    width: 98%;
     position: fixed;
     z-index: 10;
 }

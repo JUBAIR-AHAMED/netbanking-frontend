@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
             dateOfBirth: document.getElementById('dob').value,
             branchId: document.getElementById('branchId').value || null,
             role: document.getElementById('role').value,
-            status: document.getElementById('status').value // Added status field
+            status: document.getElementById('status').value
         };
 
         try {

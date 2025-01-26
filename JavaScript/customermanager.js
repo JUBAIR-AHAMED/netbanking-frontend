@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify(criteria)
             });
             const data = await response.json();
-            if (data.status) {
+            if (data.status==200) {
                 const totalCount = data.count || 0; // Total accounts count
                 totalPages = Math.ceil(totalCount / limit); // Calculate total pages
             } else {
@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify(criteria)
             });
             const data = await response.json();
-            if (data.status) {
+            if (data.status==200) {
                 if (Array.isArray(data.users)) {
                     displayAccounts(data.users);
                 } else {
@@ -545,7 +545,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
             const result = await response.json();
     
-            if (response.ok) {
+            if (result.data==200) {
                 alert("Profile updated successfully!");
             } else {
                 alert(result.message || "Failed to update profile.");

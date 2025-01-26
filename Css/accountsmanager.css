@@ -494,6 +494,7 @@
     padding: 10px 0;
     border-bottom: 1px solid #f0f0f0;
     height: 30px;
+    width: 100%;
 }
 
 .info-row label{
@@ -512,6 +513,7 @@
 .editable-field {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
 }
 
 .edit-icon {
@@ -544,6 +546,8 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     outline: none;
+    text-align: right;
+    width: 150px;
 }
 
 .save-button {
@@ -560,4 +564,52 @@
 
 .save-button:hover {
     background-color: #218838;
+}
+
+select {
+    appearance: none; /* Removes default OS styling */
+    -webkit-appearance: none; /* Safari-specific */
+    -moz-appearance: none; /* Firefox-specific */
+    padding: 10px;
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  /* .editable-input {
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin: 0;
+} */
+
+.dropdown-menu {
+    display: none; /* Initially hidden */
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+    list-style: none;
+    padding: 0;
+    margin-top: 5px;
+    width: 100%; /* Match the input field width */
+    z-index: 1000;
+}
+
+.dropdown-menu li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+    background-color: #f0f0f0;
+}
+
+.editable-field-wrapper {
+    position: relative; 
+    display: inline-block; 
 }

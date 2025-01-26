@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify(criteria)
             });
             const data = await response.json();
-            if (data.status) {
+            if (data.status==200) {
                 const totalCount = data.count || 0; // Total accounts count
                 totalPages = Math.ceil(totalCount / limit); // Calculate total pages
             } else {
@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify(criteria)
             });
             const data = await response.json();
-            if (data.status) {
+            if (data.status==200) {
                 if (Array.isArray(data.branch)) {
                     displayAccounts(data.branch);
                 } else {
@@ -461,7 +461,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     
             const data = await response.json();
-            if (data.status) {
+            if (data.status==200) {
                 return data.branch; // Return the branch details
             } else {
                 alert(data.message);

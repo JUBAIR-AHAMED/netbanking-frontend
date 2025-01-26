@@ -1,3 +1,6 @@
+let tokenBranchId = null;
+let isBranchIdFieldEditing = false; // Flag to track if branchIdField is being edited, declare globally
+
 // // Function to decode JWT token and extract role and branchId
 function decodeJWT(token) {
     try {
@@ -13,8 +16,39 @@ function decodeJWT(token) {
     }
 }
 
+function setupNumericInputValidation(inputElement, maxLength) {
+    // Prevent non-numeric input during typing
+    inputElement.addEventListener('keypress', function (event) {
+        const char = String.fromCharCode(event.which || event.keyCode);
+        if (!/^\d$/.test(char)) {
+            event.preventDefault(); // Block non-numeric characters
+        }
+    });
+
+    // Ensure no invalid characters or excess digits after paste or programmatic change
+    inputElement.addEventListener('input', function (event) {
+        let value = event.target.value;
+
+        // Remove non-numeric characters
+        value = value.replace(/\D/g, '');
+
+        // Enforce maximum length
+        if (value.length > maxLength) {
+            value = value.slice(0, maxLength);
+        }
+
+        // Update the input value
+        event.target.value = value;
+    });
+}
+
+// setupNumericInputValidation(document.getElementById('accountNumber'), 16); // Assuming these are in account page, not employee page
+// setupNumericInputValidation(document.getElementById('userId'), 6);
+// setupNumericInputValidation(document.getElementById('branchId'), 5);
+
+
 function showEmployeeDetails(user) {
-    const modal = document.getElementById("accountModal");
+    const modal = document.getElementById("accountModal"); // Reusing accountModal, ensure this is intentional
     const modalContent = document.getElementById("modalContent");
     modal.dataset.customer = JSON.stringify(user);
     // Format account details
@@ -55,8 +89,9 @@ function showEmployeeDetails(user) {
         </div>
         <div class="info-row">
             <label for="branchIdField">Branch Id</label>
-            <div class="editable-field">
+            <div class="editable-field editable-field-wrapper"> <!- ADDED editable-field-wrapper CLASS -->
                 <span id="branchIdField">${(user.branchId==null? "Not set": user.branchId)}</span>
+                <ul id="branchIdDropdown" class="dropdown-menu"></ul> <!- ADDED DROPDOWN UL -->
                 <button class="edit-icon" onclick="toggleEdit('branchIdField')"><img src="icons/pen.png" alt="edit-logo"></button>
             </div>
         </div>
@@ -67,12 +102,19 @@ function showEmployeeDetails(user) {
                 <button class="edit-icon" onclick="toggleEdit('roleField')"><img src="icons/pen.png" alt="edit-logo"></button>
             </div>
         </div>
-        <button class="save-button">Save Changes</button>    
+        <button class="save-button" onclick="saveChanges()">Save Changes</button> <!- ADDED onclick to saveChanges -->
     `;
 
     // Show the modal
     modal.style.display = "block";
+    setupBranchIdDropdown(); // You might need to call setupBranchIdDropdown again if needed for employee modal as well.
 }
+
+function closeModal() {
+    const modal = document.getElementById("accountModal");
+    modal.style.display = "none";
+}
+
 
 function saveEdit(fieldId, newValue) {
     // Create a span to replace input
@@ -82,6 +124,9 @@ function saveEdit(fieldId, newValue) {
     const input = document.getElementById(fieldId);
     if (input) {
         input.replaceWith(span);
+    }
+    if (fieldId === 'branchIdField') {
+        isBranchIdFieldEditing = false; // Clear editing flag when saved
     }
 }
 
@@ -120,14 +165,22 @@ function toggleEdit(fieldId) {
                  }
                   input.appendChild(optionElement)
             })
-        }
-        else if (fieldId === 'dateOfBirth') {
+        } else if (fieldId === 'dateOfBirth') {
             input = document.createElement('input');
             input.type = 'date';
             input.value = new Date(Date.parse(currentText.split(".").reverse().join("-"))).toISOString().split('T')[0];; // Set value to current date
 
             input.classList.add('editable-input');
             input.id = fieldId;
+        } else if (fieldId === 'branchIdField') { // BRANCH ID FIELD HANDLING
+            input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentText;
+            input.classList.add('editable-input');
+            input.id = fieldId;
+            input.dataset.originalValue = currentText; // Store original value
+            setupBranchIdDropdownInput(input); // Setup dropdown input behavior
+            isBranchIdFieldEditing = true; // Set editing flag to true
         }
          else {
              input = document.createElement('input');
@@ -143,24 +196,39 @@ function toggleEdit(fieldId) {
         // Focus the input for immediate editing
         input.focus();
 
-        // Save on blur or enter key
-        input.addEventListener('blur', () => {
-            if(document.getElementById(fieldId)) {
-                  saveEdit(fieldId, input.value);
-            }
-        });
-       input.addEventListener('keypress', (e) => {
-           if (e.key === 'Enter') {
+        // Add blur and keypress listeners - CORRECTED to include blur for branchIdField
+        if (fieldId !== 'branchIdField') {
+            input.addEventListener('blur', () => {
                 if(document.getElementById(fieldId)) {
-                   saveEdit(fieldId, input.value);
+                      saveEdit(fieldId, input.value);
+                }
+            });
+
+            input.addEventListener('keypress', (e) => {
+               if (e.key === 'Enter') {
+                    if(document.getElementById(fieldId)) {
+                       saveEdit(fieldId, input.value);
+                   }
                }
-           }
-       });
+           });
+        } else { // BLUR EVENT LISTENER FOR BRANCH ID FIELD - REVERT LOGIC
+            input.addEventListener('blur', () => {
+                if (document.getElementById(fieldId)) {
+                    if (isBranchIdFieldEditing) { // Check if editing flag is still true
+                        const originalValue = input.dataset.originalValue;
+                        saveEdit(fieldId, originalValue); // Restore original value if blurred without save
+                    } else {
+                        saveEdit(fieldId, input.value); // Still save if flag is false (meaning it was saved through dropdown/enter)
+                    }
+                    isBranchIdFieldEditing = false; // Reset editing flag on blur, regardless of revert or save
+                }
+            });
+        }
 
     }
 }
 
-function createAccountCard(account) {
+function createAccountCard(account) { // Reused function, might be employee card now?
     const {
         email,
         name,
@@ -198,6 +266,117 @@ function formatDate(timestamp) {
     return `${day}.${month}.${year}`;
 }
 
+
+function displayBranchDropdown(branchs, dropdownElement) {
+    dropdownElement.innerHTML = ''; // Clear existing options
+    branchs.forEach(branch => {
+        const listItem = document.createElement('li');
+        listItem.dataset.value = branch.branchId;
+        listItem.textContent = `${branch.branchId} - ${branch.name}`; // Display branchId and name
+        listItem.addEventListener('click', function () {
+            const inputField = document.getElementById('branchIdField'); // Get the input field
+            if (inputField) {
+                inputField.value = branch.branchId; // Set input value
+                saveEdit('branchIdField', branch.branchId); // Save edit with new value
+            }
+            dropdownElement.style.display = 'none'; // Hide the dropdown
+        });
+        dropdownElement.appendChild(listItem);
+    });
+    dropdownElement.style.display = 'block'; // Show the dropdown
+}
+
+
+let branchDropdownInput; // To hold the branchIdField input element globally within this scope
+
+function setupBranchIdDropdownInput(inputElement) {
+    branchDropdownInput = inputElement; // Assign the inputElement to the global variable
+
+    inputElement.addEventListener('input', async function () {
+        const inputValue = inputElement.value.trim();
+        const dropdownElement = document.getElementById('branchIdDropdown');
+
+        if (inputValue.length >= 1) { // Fetch branches when input length is at least 1
+            try {
+                const criteria = { branchId: inputValue, searchSimilar: true }; // Enable similar search
+                const url = new URL('http://localhost:8080/NetBanking/branch');
+                const token = localStorage.getItem('jwt'); // Retrieve JWT token
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'action': 'GET',
+                        'Content-Type': 'application/json' // Specify content type
+                    },
+                    body: JSON.stringify(criteria)
+                });
+
+                const data = await response.json();
+                if (data.status == 200) {
+                    if (Array.isArray(data.branch) && data.branch.length > 0) {
+                        displayBranchDropdown(data.branch, dropdownElement);
+                    } else {
+                        dropdownElement.innerHTML = '<li>No matches</li>';
+                        dropdownElement.style.display = 'block';
+                    }
+                } else {
+                    dropdownElement.innerHTML = `<li>Error: ${data.message}</li>`;
+                    dropdownElement.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error fetching branches:', error);
+                dropdownElement.innerHTML = '<li>Error fetching branches</li>';
+                dropdownElement.style.display = 'block';
+            }
+        } else {
+            dropdownElement.style.display = 'none'; // Hide dropdown if input is too short
+        }
+    });
+
+    // Close dropdown on blur
+    inputElement.addEventListener('blur', () => {
+        const dropdownElement = document.getElementById('branchIdDropdown');
+        setTimeout(() => {
+            if (!dropdownElement.matches(':hover') && document.activeElement !== inputElement) {
+                dropdownElement.style.display = 'none';
+                // saveEdit('branchIdField', inputElement.value); // COMMENTED OUT - DEBUG STEP - Prevent saveEdit from here interfering with revert
+            }
+        }, 150);
+    });
+
+    // Handle keypress on input
+    inputElement.addEventListener('keypress', function(event) {
+        const dropdownElement = document.getElementById('branchIdDropdown');
+        if (event.key === 'Enter') {
+            dropdownElement.style.display = 'none'; // Hide dropdown on Enter key
+            saveEdit('branchIdField', inputElement.value); // Save edit on Enter for branchIdField
+            inputElement.blur(); // Optionally remove focus after saving
+        }
+    });
+
+
+    // Prevent dropdown from closing immediately on input focus, allow input to gain focus for typing
+    inputElement.addEventListener('focus', () => {
+        const dropdownElement = document.getElementById('branchIdDropdown');
+        if (dropdownElement.style.display !== 'block' && inputElement.value.trim().length >= 1) {
+            dropdownElement.style.display = 'block'; // Re-show if it was hidden and input has content
+        }
+    });
+}
+
+
+function setupBranchIdDropdown() {
+    const branchIdElement = document.getElementById("branchIdField");
+    if (branchIdElement && branchIdElement.parentElement.classList.contains('editable-field')) {
+        branchIdElement.addEventListener('click', function () {
+            if (branchIdElement.tagName === 'SPAN') {
+                toggleEdit('branchIdField'); // Turn span into input for editing and dropdown
+            }
+        });
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', function () {
     const userIdField = document.getElementById('userId');
     const nameField = document.getElementById('name');
@@ -231,7 +410,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const limit = 8; // Items per page
     let totalPages = 1; // Total pages will be calculated later
     let branch
-    let searchCriteria = {}; 
+    let searchCriteria = {};
 
     const debounce = (func, delay) => {
         let timeout;
@@ -246,12 +425,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const nameField = document.getElementById('name');
     const userIdField = document.getElementById('userId');
     const emailField = document.getElementById('email');
-    const branchIdField = document.getElementById('branchId');
+    const branchIdField_search = document.getElementById('branchId'); // Renamed to avoid conflict
 
     nameField.addEventListener('input', debouncedSearch);
     userIdField.addEventListener('input', debouncedSearch);
     emailField.addEventListener('input', debouncedSearch);
-    branchIdField.addEventListener('input', debouncedSearch);
+    branchIdField_search.addEventListener('input', debouncedSearch);
 
     async function handleRealTimeSearch() {
         const name = document.getElementById('name').value.trim();
@@ -289,7 +468,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify(criteria)
             });
             const data = await response.json();
-            if (data.status) {
+            if (data.status==200) {
                 const totalCount = data.count || 0; // Total accounts count
                 totalPages = Math.ceil(totalCount / limit); // Calculate total pages
             } else {
@@ -321,7 +500,7 @@ document.addEventListener('DOMContentLoaded', function () {
             criteria.userType = 'employee';
             criteria.moreDetails = true;
             criteria.searchSimilar = true;
-            
+
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -331,7 +510,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify(criteria)
             });
             const data = await response.json();
-            if (data.status) {
+            if (data.status==200) {
                 if (Array.isArray(data.users)) {
                     displayAccounts(data.users);
                 } else {
@@ -352,13 +531,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const accountsContainer = document.querySelector('.accountInsert');
 
         if (!accounts || accounts.length === 0) {
-            accountsContainer.innerHTML = "<p>No accounts found.</p>";
+            accountsContainer.innerHTML = "<p>No employees found.</p>"; // Changed message
             return;
         }
 
         accountsContainer.innerHTML = ''; // Clear previous accounts
         accounts.forEach(account => {
-            const accountHTML = createAccountCard(account);
+            const accountHTML = createAccountCard(account); // Reusing account card, might need employee card
             accountsContainer.insertAdjacentHTML('beforeend', accountHTML);
         });
     }
@@ -399,18 +578,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     async function saveChanges() {
-        const modal = document.getElementById("accountModal");
-        const customerString = modal.dataset.customer; 
-        const originalProfile = JSON.parse(customerString); 
+        const modal = document.getElementById("accountModal"); // Reusing accountModal
+        const customerString = modal.dataset.customer;
+        const originalProfile = JSON.parse(customerString);
         const updatedProfile = {};
-    
+
         // Compare each field with the original data
         const username = document.getElementById("username").innerText;
         if (username !== originalProfile.name) updatedProfile.name = username;
-    
+
         const mail = document.getElementById("mail").innerText;
         if (mail !== originalProfile.email) updatedProfile.email = mail;
-    
+
         const status = document.getElementById("status").innerText;
         if (status !== originalProfile.status) updatedProfile.status = status;
 
@@ -421,8 +600,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (branchId != originalProfile.branchId) updatedProfile.branchId = branchId;
 
         const role = document.getElementById("roleField").innerText;
-        if (role != originalProfile.branchId) updatedProfile.role = role;
-        
+        if (role != originalProfile.role) updatedProfile.role = role; // Corrected to role
+
         if (Object.keys(updatedProfile).length === 0) {
             alert("No changes detected.");
             return;
@@ -432,7 +611,7 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             // Retrieve the JWT token from local storage
             const token = localStorage.getItem("jwt");
-    
+
             // Send updated profile data to the server
             const response = await fetch('http://localhost:8080/NetBanking/employee', {
                 method: "PUT",
@@ -442,55 +621,57 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: JSON.stringify(updatedProfile)
             });
-    
+
             const result = await response.json();
-    
-            if (response.ok) {
-                alert("Profile updated successfully!");
+
+            if (result.status==200) {
+                alert("Employee profile updated successfully!"); // Changed alert message
+                closeModal(); // Close modal after save
+                fetchAccounts(); // Refresh employee list
             } else {
-                alert(result.message || "Failed to update profile.");
+                alert(result.message || "Failed to update employee profile."); // Changed alert message
             }
         } catch (error) {
             console.error(error);
-            alert("An error occurred while updating the profile.");
+            alert("An error occurred while updating the employee profile."); // Changed alert message
         }
     }
 
     // Event listener for the search form
     document.getElementById('searchForm').addEventListener('submit', async function (event) {
         event.preventDefault(); // Prevent default form submission
-    
+
         // Get the input values
         const email = document.getElementById('email').value.trim();
         const name = document.getElementById('name').value.trim();
         const userId = document.getElementById('userId').value.trim();
         const branchId = document.getElementById('branchId').value.trim();
-    
+
         // Validation: At least one input must be provided
         if (!email && !name && !userId && !branchId) {
             alert("Please enter at least one search criterion.");
             return;
         }
-    
+
         try {
             // Set the search criteria
             searchCriteria.email = email;
             searchCriteria.name = name;
             searchCriteria.userId = userId;
             searchCriteria.branchId = branchId;
-    
+
             // Reset to the first page
             currentPage = 1;
-    
+
             // Fetch total count and accounts
             await fetchTotalCount(searchCriteria);
             await fetchAccounts();
         } catch (error) {
             console.error('Error during search:', error);
-            alert("Failed to retrieve accounts. Check console for details.");
+            alert("Failed to retrieve employees. Check console for details."); // Changed alert message
         }
     });
-    
+
 
     // Initialize with no filters (default behavior)
     async function initialize() {
@@ -500,24 +681,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 window.location.href = "/login.html";
                 return;
             }
-    
+
             const decodedToken = decodeJWT(token); // Decode the JWT token
             const branchId = decodedToken?.branchId; // Extract the branchId
-    
+
             if (!branchId) {
                 alert("Branch ID not found in token.");
                 return;
             }
-    
+
             // Set the initial search criteria to the branchId
-            searchCriteria = { };
-    
+            searchCriteria = { }; // Or adjust initial criteria if needed
+
             // Fetch total count and accounts based on the branchId
             await fetchTotalCount(searchCriteria);
             await fetchAccounts();
         } catch (error) {
             console.error('Error during initialization:', error);
-            alert("Failed to initialize accounts. Please check the console for details.");
+            alert("Failed to initialize employee list. Please check the console for details."); // Changed alert message
         }
     }
     initialize();
@@ -526,10 +707,10 @@ document.addEventListener('DOMContentLoaded', function () {
     function createModal() {
         // Create modal HTML structure
         const modalHTML = `
-            <div id="accountModal" class="modal">
+            <div id="accountModal" class="modal"> <!- Reusing accountModal ID -->
                 <div class="modal-content">
-                    <span class="close-button" id="closeModal">&times;</span>
-                    <h2>Employee Details</h2>
+                    <span class="close-button" id="closeModal">×</span>
+                    <h2>Employee Details</h2> <!- Changed Modal Title -->
                     <div id="modalContent"></div>
                 </div>
             </div>
@@ -545,12 +726,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function createBranchModal() {
+    function createBranchModal() { // Keeping branch modal function, even if not directly used in employee edit yet
         // Create modal HTML structure
         const modalHTML = `
             <div id="branchModal" class="modal">
                 <div class="modal-content">
-                    <span class="close-button" id="closeModalBranch">&times;</span>
+                    <span class="close-button" id="closeModalBranch">×</span>
                     <h2>Branch Details</h2>
                     <div id="branchModalContent"></div>
                 </div>
@@ -579,17 +760,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // document.addEventListener("click", async function(event) {
-    //     if (event.target.classList.contains("moreBranch")) {
-    //         // const branchId = JSON.parse(event.target.getAttribute("data-branch"));
-    //         const data = JSON.parse(event.target.getAttribute("data-branch"));
-    //         const branch = await fetchBranchs(data.branchId);
-    //         // console.log(branch[0])
-    //         if(branch){
-    //             showBranchDetails(branch);
-    //         }
-    //     }
-    // });
 
     createModal();
     createBranchModal();

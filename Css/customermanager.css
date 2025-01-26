@@ -540,10 +540,11 @@
 .editable-input {
     font-size: 16px;
     padding: 5px;
-    width: 200px;
+    width: 150px;
     border: 1px solid #ccc;
     border-radius: 5px;
     outline: none;
+    text-align: right;
 }
 
 .save-button {
@@ -560,4 +561,33 @@
 
 .save-button:hover {
     background-color: #218838;
+}
+
+.editable-field-wrapper {
+    position: relative; /*  IMPORTANT: Positioning context for absolute dropdown */
+    display: inline-block; /* Or block, depending on desired layout */
+}
+
+.dropdown-menu {
+    display: none; /* Initially hidden */
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+    list-style: none;
+    padding: 0;
+    margin-top: 5px;
+    width: 100%; /* Match the input field width */
+    z-index: 1000;
+}
+
+.dropdown-menu li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+    background-color: #f0f0f0;
 }
